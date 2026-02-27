@@ -98,6 +98,7 @@ async function saveAccountMonthConfig(formData: FormData) {
   const month = String(formData.get("month") ?? "").trim();
   const accountId = String(formData.get("accountId") ?? "").trim();
   const openingBalance = String(formData.get("openingBalance") ?? "").trim();
+  const incomeBase = String(formData.get("incomeBase") ?? "").trim();
 
   if (!workspaceId || !month || !accountId) return;
 
@@ -108,6 +109,7 @@ async function saveAccountMonthConfig(formData: FormData) {
       month,
       accountId,
       opening_balance: openingBalance || "0.00",
+      income_base: incomeBase || "0.00",
     }),
     rawErrorBody: true,
   });
@@ -221,6 +223,21 @@ export default async function SettingsPage({
               <Input type="hidden" name="workspaceId" value={workspaceId} />
               <Input type="hidden" name="month" value={month} />
               <Input type="hidden" name="accountId" value={accountId} />
+
+              <label className="grid gap-1">
+                <span className="text-sm">Income base</span>
+                <Input
+                  name="incomeBase"
+                  inputMode="decimal"
+                  placeholder="e.g. 10000.00"
+                  defaultValue={cfg?.income_base ?? ""}
+                />
+                <span className="text-xs text-muted-foreground">
+                  This is used as the base for calculating progress against
+                  income-based budgets. It does not affect any calculations in
+                  the dashboard.
+                </span>
+              </label>
 
               <label className="grid gap-1">
                 <span className="text-sm">Opening balance</span>
