@@ -1,16 +1,12 @@
 import { defaultMonthYYYYMM } from "@/lib/month";
 import { MonthPicker } from "@/components/MonthPicker";
-import { apiFetch } from "@/lib/api";
-import {
-  BudgetMonitorMode,
-  getBudgetMonitor,
-  listBudgets,
-} from "@/lib/api/budgets";
+import { getBudgetMonitor, listBudgets } from "@/lib/api/budgets";
 import BudgetsTable from "./BudgetsTable";
 import PieChartPage from "./PieChartPage";
 import { formatMoney } from "@/lib/formatMoney";
 import { getWorkspaceId } from "@/lib/api/workspace";
 import { listCategories } from "@/lib/api/category";
+import { BudgetsTabs } from "@/components/budgets/BudgetTabs";
 
 export default async function BudgetsPage({
   searchParams,
@@ -38,14 +34,15 @@ export default async function BudgetsPage({
 
   return (
     <div className="min-h-screen">
-      <div className="w-full p-4 sm:px-6 sm:py-8 space-y-5 sm:space-y-6">
+      <div className="w-full px-4 lg:px-6 py-4 space-y-6">
+        <BudgetsTabs active="monthly" />
         {/* ── Page header ─────────────────────────────────────────────── */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <div>
             <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-50">
               Budgets
             </h1>
-            <p className="text-sm text-stone-500 dark:text-stone-400 mt-0.5">
+            <p className="text-sm text-muted-foreground">
               Track your spending against monthly targets
             </p>
           </div>

@@ -185,3 +185,26 @@ type DashboardResponse = {
   budgets: DashboardBudgets;
   recentTransactions: DashboardTransaction[];
 };
+
+type BudgetPeriodRow = {
+  categoryId: string;
+  categoryName: string;
+  ruleType: "fixed" | "percent";
+  monthlyBudget: string;
+  periodBudget: string;
+  spent: string;
+  remaining: string;
+  isExceeded: boolean;
+  periodDays: number;
+  periodRatio: string;
+};
+
+type BudgetPeriodReport = {
+  dateFrom: string;
+  dateTo: string;
+  month: string;
+  periodDays: number;
+  daysInMonth: number;
+  periodRatio: string;
+  rows: BudgetPeriodRow[];
+};

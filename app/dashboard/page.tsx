@@ -17,6 +17,8 @@ import { listCategories } from "@/lib/api/category";
 import { listTransactions } from "@/lib/api/transactions";
 import { CopyBudgetsButton } from "@/components/budgets/CopyBudgetsButton";
 import { getBudgetPeriodReports } from "@/lib/api/reports";
+import { getIntelligence } from "@/lib/api/intelligence";
+import { IntelligencePanel } from "./_components/IntelligencePanel";
 
 const DashboardPage = async ({
   searchParams,
@@ -32,19 +34,21 @@ const DashboardPage = async ({
   // Resolve workspace first — all data depends on it
   const workspaceId = await getWorkspaceId();
 
-  const [data, accounts, categoriesAll, tx] = await Promise.all([
+  const [data, accounts, categoriesAll, tx, intelligence] = await Promise.all([
     getDashboard({ workspaceId, month, accountId, mode: "rollup" }),
     listAccounts(workspaceId),
     listCategories(workspaceId),
     listTransactions(workspaceId, month),
+    getIntelligence({ workspaceId, month, accountId }).catch((err) => {
+      console.error("Intelligence fetch failed:", err.message); // ← shows the real error
+      return null;
+    }),
   ]);
+
+  console.log("Dashboard data:", { data, intelligence });
 
   const roots = categoriesAll.filter((c) => c.parent === null);
   const flatTree = flattenCategoryTree(roots);
-
-  // const budgetPeriod = await getBudgetPeriodReports("2026-02-01", "2026-02-26");
-
-  // console.log("Budget", budgetPeriod);
 
   return (
     <div className="px-4 lg:px-6">
@@ -93,6 +97,8 @@ const DashboardPage = async ({
             variant="balance"
           />
         </div>
+
+        {intelligence && <IntelligencePanel data={intelligence} />}
 
         <div className="w-full">
           <DashboardBudgetProgress kpis={data.kpis} />

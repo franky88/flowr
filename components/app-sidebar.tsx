@@ -61,11 +61,11 @@ const data = {
       url: "/dashboard/cashflow",
       icon: IconChartBar,
     },
-    // {
-    //   title: "Categories",
-    //   url: "/dashboard/categories",
-    //   icon: IconFolder,
-    // },
+    {
+      title: "Reports",
+      url: "/dashboard/reports",
+      icon: IconFolder,
+    },
 
     // {
     //   title: "Accounts",

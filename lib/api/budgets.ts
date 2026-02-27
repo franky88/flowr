@@ -57,3 +57,16 @@ export async function getBudgetMonitor(
     `/v1/workspaces/${workspaceId}/reports/budget-monitor/?${qs.toString()}`,
   );
 }
+
+export async function getBudgetPeriod(
+  workspaceId: string,
+  dateFrom: string,
+  dateTo: string,
+  accountId?: string,
+): Promise<BudgetPeriodReport> {
+  const qs = new URLSearchParams({ dateFrom, dateTo });
+  if (accountId) qs.set("accountId", accountId);
+  return apiFetch<BudgetPeriodReport>(
+    `/v1/workspaces/${workspaceId}/reports/budget-period/?${qs.toString()}`,
+  );
+}
