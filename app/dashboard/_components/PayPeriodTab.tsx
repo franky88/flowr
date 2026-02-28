@@ -3,6 +3,37 @@
 import { useState, useTransition } from "react";
 import { formatMoney } from "@/lib/formatMoney";
 import { formatDate } from "@/lib/formatDate";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+
+// Colors from globals.css chart variables (oklch → hex)
+const CHART_COLORS = {
+  safe: "#5a9ef0", // --chart-1  light blue
+  warning: "#4a6fd4", // --chart-4  mid blue
+  exceeded: "#f05a5a", // --chart-3  warm red
+  remaining: "#c8f05a", // --chart-2  lime-green
+} as const;
+
+function chartFill(isExceeded: boolean, pctVal: number): string {
+  if (isExceeded) return CHART_COLORS.exceeded;
+  if (pctVal >= 90) return CHART_COLORS.warning;
+  return CHART_COLORS.safe;
+}
+
+const stressChartConfig = {
+  pct: { label: "% Used", color: CHART_COLORS.safe },
+} satisfies ChartConfig;
+
+const stackedChartConfig = {
+  Spent: { label: "Spent", color: CHART_COLORS.safe },
+  Remaining: { label: "Remaining", color: CHART_COLORS.remaining },
+} satisfies ChartConfig;
 
 type Props = {
   month: string;
@@ -10,7 +41,6 @@ type Props = {
   workspaceId: string;
 };
 
-// Parse "YYYY-MM" into first and last day strings
 function monthBounds(month: string) {
   const [y, m] = month.split("-").map(Number);
   const last = new Date(y, m, 0).getDate();
@@ -22,15 +52,7 @@ function monthBounds(month: string) {
   };
 }
 
-type Preset = {
-  label: string;
-  from: (month: string) => string;
-  to: (month: string) => string;
-};
-
-function buildPresets(
-  month: string,
-): { label: string; from: string; to: string }[] {
+function buildPresets(month: string) {
   const [y, m] = month.split("-").map(Number);
   const lastDay = new Date(y, m, 0).getDate();
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -107,10 +129,36 @@ export default function PayPeriodTab({ month, accountId, workspaceId }: Props) {
   const days = daysBetween(dateFrom, dateTo);
   const ratio = days / daysInMonth;
 
+  // Derived chart data — only built when report is available
+  const chartData =
+    report?.rows
+      .filter((r) => Number(r.periodBudget) > 0)
+      .map((r) => {
+        const spent = Number(r.spent);
+        const budget = Number(r.periodBudget);
+        const pctVal = budget > 0 ? (spent / budget) * 100 : 0;
+        return {
+          name:
+            r.categoryName.length > 14
+              ? r.categoryName.slice(0, 13) + "…"
+              : r.categoryName,
+          fullName: r.categoryName,
+          Spent: spent,
+          Budget: budget,
+          Remaining: Math.max(budget - spent, 0),
+          pct: Math.round(pctVal),
+          isExceeded: r.isExceeded,
+        };
+      }) ?? [];
+
+  const stressData = [...chartData].sort(
+    (a, b) => b.Spent / b.Budget - a.Spent / a.Budget,
+  );
+
   return (
     <div className="space-y-3">
       {/* Period bar */}
-      <div className="flex flex-wrap items-center gap-2 p-3 border border-border rounded-md bg-card text-xs">
+      <div className="flex flex-wrap items-center gap-2 p-3 border border-border rounded-xl bg-card text-xs">
         <div className="flex gap-1.5 flex-wrap">
           {presets.map((p, i) => (
             <button
@@ -159,7 +207,7 @@ export default function PayPeriodTab({ month, accountId, workspaceId }: Props) {
       </div>
 
       {error && (
-        <div className="rounded-md border border-destructive/40 bg-destructive/10 text-destructive px-3 py-2 text-xs font-mono">
+        <div className="rounded-xl border border-destructive/40 bg-destructive/10 text-destructive px-3 py-2 text-xs font-mono">
           {error}
         </div>
       )}
@@ -181,7 +229,7 @@ export default function PayPeriodTab({ month, accountId, workspaceId }: Props) {
       {report && !isPending && (
         <>
           {/* Summary strip */}
-          <div className="grid grid-cols-3 sm:grid-cols-6 border border-border rounded-md overflow-hidden text-xs">
+          <div className="grid grid-cols-3 sm:grid-cols-6 border border-border rounded-xl overflow-hidden text-xs">
             {[
               {
                 label: "Period",
@@ -246,7 +294,7 @@ export default function PayPeriodTab({ month, accountId, workspaceId }: Props) {
           </div>
 
           {/* Table */}
-          <div className="rounded-md border border-border overflow-hidden text-xs">
+          <div className="rounded-xl border border-border overflow-hidden text-xs">
             <table className="w-full border-collapse bg-card">
               <thead>
                 <tr className="bg-muted border-b border-border">
@@ -381,11 +429,215 @@ export default function PayPeriodTab({ month, accountId, workspaceId }: Props) {
               </tfoot>
             </table>
           </div>
+
           <p className="text-[0.65rem] font-mono text-muted-foreground">
             * Period budget = monthly budget × ({report.periodDays} ÷{" "}
             {report.daysInMonth} days). Spending filtered to transactions within
             the selected date range.
           </p>
+
+          {/* Charts row */}
+          {chartData.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* Chart 1: Horizontal % of period budget used, sorted by stress */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <p className="font-mono text-[0.6rem] uppercase tracking-widest text-muted-foreground mb-3">
+                  Period Budget Stress — % Used
+                </p>
+                <ChartContainer
+                  config={stressChartConfig}
+                  className="h-55 w-full"
+                >
+                  <BarChart
+                    layout="vertical"
+                    data={stressData}
+                    margin={{ top: 0, right: 36, left: 0, bottom: 0 }}
+                    barCategoryGap="20%"
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      horizontal={false}
+                      stroke="hsl(var(--border))"
+                    />
+                    <XAxis
+                      type="number"
+                      domain={[0, 100]}
+                      tickFormatter={(v) => `${v}%`}
+                      tick={{
+                        fontSize: 9,
+                        fontFamily: "monospace",
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
+                      axisLine={false}
+                      tickLine={false}
+                      ticks={[0, 25, 50, 75, 100]}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      tick={{
+                        fontSize: 9,
+                        fontFamily: "monospace",
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={72}
+                    />
+                    <ChartTooltip
+                      cursor={{ opacity: 0.08 }}
+                      content={(props: any) => {
+                        const { active, payload } = props;
+                        if (!active || !payload?.length) return null;
+                        const d = payload[0].payload;
+                        return (
+                          <div className="bg-card border border-border rounded-lg p-3 shadow-lg font-mono text-xs space-y-0.5">
+                            <p className="font-semibold text-foreground mb-1">
+                              {d.fullName}
+                            </p>
+                            <p className="text-muted-foreground">
+                              Used:{" "}
+                              <span className="text-foreground font-semibold">
+                                {d.pct}%
+                              </span>
+                            </p>
+                            <p className="text-muted-foreground">
+                              Spent:{" "}
+                              <span className="text-foreground font-semibold">
+                                {formatMoney(d.Spent)}
+                              </span>
+                            </p>
+                            <p className="text-muted-foreground">
+                              Period Budget:{" "}
+                              <span className="text-foreground font-semibold">
+                                {formatMoney(d.Budget)}
+                              </span>
+                            </p>
+                          </div>
+                        );
+                      }}
+                    />
+                    <Bar dataKey="pct" radius={[0, 3, 3, 0]} maxBarSize={16}>
+                      {stressData.map((entry, index) => (
+                        <Cell
+                          key={`stress-${index}`}
+                          fill={chartFill(
+                            entry.isExceeded,
+                            (entry.Spent / entry.Budget) * 100,
+                          )}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ChartContainer>
+              </div>
+
+              {/* Chart 2: Stacked bar — Spent + Remaining per category */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <p className="font-mono text-[0.6rem] uppercase tracking-widest text-muted-foreground mb-3">
+                  Spent vs Remaining
+                </p>
+                <ChartContainer
+                  config={stackedChartConfig}
+                  className="h-55 w-full"
+                >
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 4, right: 4, left: 0, bottom: 4 }}
+                    barCategoryGap="28%"
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="hsl(var(--border))"
+                    />
+                    <XAxis
+                      dataKey="name"
+                      tick={{
+                        fontSize: 9,
+                        fontFamily: "monospace",
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
+                      axisLine={false}
+                      tickLine={false}
+                      interval={0}
+                    />
+                    <YAxis
+                      tickFormatter={(v) =>
+                        v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v}`
+                      }
+                      tick={{
+                        fontSize: 9,
+                        fontFamily: "monospace",
+                        fill: "hsl(var(--muted-foreground))",
+                      }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={40}
+                    />
+                    <ChartTooltip
+                      cursor={{ opacity: 0.08 }}
+                      content={(props: any) => {
+                        const { active, payload } = props;
+                        if (!active || !payload?.length) return null;
+                        const d = payload[0].payload;
+                        return (
+                          <div className="bg-card border border-border rounded-lg p-3 shadow-lg font-mono text-xs space-y-0.5">
+                            <p className="font-semibold text-foreground mb-1">
+                              {d.fullName}
+                            </p>
+                            <p className="text-muted-foreground">
+                              Spent:{" "}
+                              <span className="text-foreground font-semibold">
+                                {formatMoney(d.Spent)}
+                              </span>
+                            </p>
+                            <p className="text-muted-foreground">
+                              Remaining:{" "}
+                              <span className="text-foreground font-semibold">
+                                {formatMoney(d.Remaining)}
+                              </span>
+                            </p>
+                            <p className="text-muted-foreground">
+                              Period Budget:{" "}
+                              <span className="text-foreground font-semibold">
+                                {formatMoney(d.Budget)}
+                              </span>
+                            </p>
+                          </div>
+                        );
+                      }}
+                    />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar
+                      dataKey="Spent"
+                      stackId="a"
+                      radius={[0, 0, 0, 0]}
+                      maxBarSize={28}
+                    >
+                      {chartData.map((entry, index) => (
+                        <Cell
+                          key={`spent-${index}`}
+                          fill={chartFill(
+                            entry.isExceeded,
+                            (entry.Spent / entry.Budget) * 100,
+                          )}
+                        />
+                      ))}
+                    </Bar>
+                    <Bar
+                      dataKey="Remaining"
+                      stackId="a"
+                      fill={CHART_COLORS.remaining}
+                      fillOpacity={0.3}
+                      radius={[3, 3, 0, 0]}
+                      maxBarSize={28}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
