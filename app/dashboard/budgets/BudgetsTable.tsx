@@ -335,55 +335,79 @@ export default function BudgetsTable({
       {/* Totals + Controls */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         {/* Controls */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 divide-x divide-y sm:divide-y-0 border bg-card rounded-xl overflow-hidden">
-          <div className="flex flex-col gap-0.5 px-5 py-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Budget Allocated
-            </span>
-            <span className="text-2xl font-bold tabular-nums text-blue-700 dark:text-blue-400">
-              {Number(monitor.percentSummary.allocatedPercent).toFixed(1)}%
-            </span>
-          </div>
+        <div className="space-y-2 grid grid-cols-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 divide-x divide-y sm:divide-y-0 border bg-card rounded-xl overflow-hidden">
+            <div className="flex flex-col gap-0.5 px-5 py-4">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Budget Allocated
+              </span>
+              <span className="text-2xl font-bold tabular-nums text-blue-700 dark:text-blue-400">
+                {Number(monitor.percentSummary.allocatedPercent).toFixed(1)}%
+              </span>
+            </div>
 
-          <div className="flex flex-col gap-0.5 px-5 py-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Remaining
-            </span>
-            <span
-              className={`text-2xl font-bold tabular-nums ${
-                monitor.percentSummary.isOverAllocated
-                  ? "text-red-600 dark:text-red-400"
-                  : "text-emerald-600 dark:text-emerald-400"
-              }`}
-            >
-              {Number(monitor.percentSummary.remainingPercent).toFixed(1)}%
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-0.5 px-5 py-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Status
-            </span>
-            <span
-              className={`text-sm font-semibold mt-1 inline-flex items-center gap-1  ${
-                monitor.percentSummary.isOverAllocated
-                  ? "text-red-600 dark:text-red-400"
-                  : "text-emerald-600 dark:text-emerald-400"
-              }`}
-            >
+            <div className="flex flex-col gap-0.5 px-5 py-4">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Remaining
+              </span>
               <span
-                className={`inline-block w-2 h-2 rounded-full ${
+                className={`text-2xl font-bold tabular-nums ${
+                  monitor.percentSummary.isOverAllocated
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
+                {Number(monitor.percentSummary.remainingPercent).toFixed(1)}%
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-0.5 px-5 py-4">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Status
+              </span>
+              <span
+                className={`text-sm font-semibold mt-1 inline-flex items-center gap-1  ${
+                  monitor.percentSummary.isOverAllocated
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
+                <span
+                  className={`inline-block w-2 h-2 rounded-full ${
+                    monitor.percentSummary.isOverAllocated
+                      ? "bg-red-500"
+                      : "bg-emerald-500"
+                  }`}
+                />
+                {monitor.percentSummary.isOverAllocated
+                  ? "Over Allocated"
+                  : "On Track"}
+              </span>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs text-muted-foreground mb-1">
+              <span>Percent budget usage</span>
+              <span>
+                {Number(monitor.percentSummary.allocatedPercent).toFixed(1)}% of
+                100%
+              </span>
+            </div>
+            <div className="w-full h-1 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
                   monitor.percentSummary.isOverAllocated
                     ? "bg-red-500"
-                    : "bg-emerald-500"
+                    : "bg-blue-600"
                 }`}
+                style={{
+                  width: `${Math.min(Number(monitor.percentSummary.allocatedPercent), 100)}%`,
+                }}
               />
-              {monitor.percentSummary.isOverAllocated
-                ? "Over Allocated"
-                : "On Track"}
-            </span>
+            </div>
           </div>
         </div>
+
         <div className="flex items-center gap-3">
           <CopyBudgetsButton workspaceId={workspaceId} month={month} />
           <AddBudgetDialog
@@ -399,28 +423,6 @@ export default function BudgetsTable({
                 });
                 router.refresh();
               });
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="px-5 py-3 border rounded-xl bg-card space-y-2">
-        <div className="flex justify-between text-xs text-muted-foreground mb-1">
-          <span>Percent budget usage</span>
-          <span>
-            {Number(monitor.percentSummary.allocatedPercent).toFixed(1)}% of
-            100%
-          </span>
-        </div>
-        <div className="w-full h-2 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all ${
-              monitor.percentSummary.isOverAllocated
-                ? "bg-red-500"
-                : "bg-blue-600"
-            }`}
-            style={{
-              width: `${Math.min(Number(monitor.percentSummary.allocatedPercent), 100)}%`,
             }}
           />
         </div>

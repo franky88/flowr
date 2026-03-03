@@ -15,6 +15,8 @@ import { CategorySelectItem } from "@/lib/categories";
 import TransactionForm, { TransactionFormValues } from "./TransactionForm";
 import { updateTransactionAction } from "@/actions/transactions";
 import { toast } from "sonner";
+import { useState } from "react";
+import { ApiError } from "@/lib/errors";
 
 export default function EditTransaction({
   workspaceId,
@@ -30,6 +32,7 @@ export default function EditTransaction({
   categoriesForSelect: CategorySelectItem[];
 }) {
   const [open, setOpen] = React.useState(false);
+  const [serverError, setServerError] = useState<string | undefined>();
 
   async function onSubmit(values: TransactionFormValues) {
     try {
@@ -45,11 +48,14 @@ export default function EditTransaction({
         note: values.note?.trim() ? values.note.trim() : null,
       });
       toast.success("Transaction updated successfully.");
-    } catch (error) {
-      console.error("Failed to update transaction:", error);
-      toast.error("Failed to update transaction. Please try again.");
-    } finally {
       setOpen(false);
+    } catch (error) {
+      setServerError(
+        error instanceof ApiError
+          ? error.message
+          : "Failed to update transaction.",
+      );
+      // toast.error("Failed to update transaction. Please try again.");
     }
   }
 
@@ -85,6 +91,7 @@ export default function EditTransaction({
               note: tx.note ?? "",
             }}
             onSubmit={onSubmit}
+            serverError={serverError}
           />
         </div>
       </SheetContent>

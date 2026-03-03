@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import TransactionForm, { TransactionFormValues } from "./TransactionForm";
 import { Plus } from "lucide-react";
+import { ApiError } from "@/lib/errors";
+import { useState } from "react";
 
 interface AddTransactionProps {
   month: string;
@@ -30,22 +32,30 @@ export default function AddTransaction({
 }: AddTransactionProps) {
   // ← swap useState for the store
   const { isOpen, open, close } = useTransactionModal();
+  const [serverError, setServerError] = useState<string | undefined>();
 
   const disabled = accounts.length === 0 || categoriesForSelect.length === 0;
 
   async function handleCreate(values: TransactionFormValues) {
-    const fd = new FormData();
-    fd.set("workspaceId", workspaceId);
-    fd.set("month", month);
-    fd.set("date", values.date);
-    fd.set("type", values.type === "income" ? "INCOME" : "EXPENSE");
-    fd.set("amount", String(values.amount));
-    fd.set("account", values.account);
-    fd.set("category", values.category);
-    if (values.note?.trim()) fd.set("note", values.note.trim());
+    setServerError(undefined);
+    try {
+      const fd = new FormData();
+      fd.set("workspaceId", workspaceId);
+      fd.set("month", month);
+      fd.set("date", values.date);
+      fd.set("type", values.type === "income" ? "INCOME" : "EXPENSE");
+      fd.set("amount", String(values.amount));
+      fd.set("account", values.account);
+      fd.set("category", values.category);
+      if (values.note?.trim()) fd.set("note", values.note.trim());
 
-    await createTransactionAction(fd);
-    close(); // ← was setOpen(false)
+      await createTransactionAction(fd);
+      close();
+    } catch (err) {
+      setServerError(
+        err instanceof ApiError ? err.message : "Failed to add transaction.",
+      );
+    }
   }
 
   return (
@@ -70,6 +80,7 @@ export default function AddTransaction({
             categoriesForSelect={categoriesForSelect as any}
             onSubmit={handleCreate}
             defaultValues={{ type: "expense" }}
+            serverError={serverError}
           />
 
           {disabled && (

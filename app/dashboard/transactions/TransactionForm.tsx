@@ -57,6 +57,7 @@ export default function TransactionForm({
   defaultValues,
   onSubmit,
   submitLabel,
+  serverError,
 }: {
   mode: "create" | "edit";
   accounts: Account[];
@@ -64,6 +65,7 @@ export default function TransactionForm({
   defaultValues?: Partial<TransactionFormValues> & { date?: string | Date };
   onSubmit: (values: TransactionFormValues) => Promise<void> | void;
   submitLabel?: string;
+  serverError: string | undefined;
 }) {
   const {
     register,
@@ -209,6 +211,8 @@ export default function TransactionForm({
           <FieldError errors={[errors.note]} />
         </FieldContent>
       </Field>
+
+      {serverError && <p className="text-sm text-destructive">{serverError}</p>}
 
       <Button type="submit" disabled={isSubmitting}>
         {submitLabel ??
