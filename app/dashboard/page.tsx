@@ -16,7 +16,6 @@ import { listAccounts } from "@/lib/api/accounts";
 import { listCategories } from "@/lib/api/category";
 import { listTransactions } from "@/lib/api/transactions";
 import { CopyBudgetsButton } from "@/components/budgets/CopyBudgetsButton";
-import { getBudgetPeriodReports } from "@/lib/api/reports";
 import { getIntelligence } from "@/lib/api/intelligence";
 import { IntelligencePanel } from "./_components/IntelligencePanel";
 
@@ -40,12 +39,10 @@ const DashboardPage = async ({
     listCategories(workspaceId),
     listTransactions(workspaceId, month),
     getIntelligence({ workspaceId, month, accountId }).catch((err) => {
-      console.error("Intelligence fetch failed:", err.message); // ← shows the real error
+      console.error("Intelligence fetch failed:", err.message);
       return null;
     }),
   ]);
-
-  console.log("Dashboard data:", { data, intelligence });
 
   const roots = categoriesAll.filter((c) => c.parent === null);
   const flatTree = flattenCategoryTree(roots);

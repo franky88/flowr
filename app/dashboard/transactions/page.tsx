@@ -8,6 +8,7 @@ import { getWorkspaceId, getWorkspaceMembers } from "@/lib/api/workspace";
 import { listAccounts } from "@/lib/api/accounts";
 import { listTransactions } from "@/lib/api/transactions";
 import { listCategories } from "@/lib/api/category";
+import { ExportButton } from "@/components/ExportButton";
 
 export default async function TransactionsPage({
   searchParams,
@@ -37,6 +38,17 @@ export default async function TransactionsPage({
     ]),
   );
 
+  console.log("transactions", txs);
+
+  const accountById = new Map(accounts.map((a) => [a.id, a.name]));
+  const categoryById = new Map(categoriesAll.map((c) => [c.id, c.name]));
+
+  const txsForExport = txs.map((t) => ({
+    ...t,
+    account:  accountById.get(t.account)  ?? t.account,
+    category: categoryById.get(t.category) ?? t.category,
+  }));
+
   return (
     <div className="px-4 sm:px-6 lg:px-6 w-full">
       {/* Page Header */}
@@ -58,6 +70,20 @@ export default async function TransactionsPage({
             accounts={accounts}
             categoriesForSelect={categoriesForSelect}
             title="Transaction"
+          />
+          <ExportButton
+            filename={`transactions-${month}`}
+            title="Transactions"
+            month={month}
+            columns={[
+              { header: "Date",     key: "date",     width: 14 },
+              { header: "Type",     key: "type",     width: 10 },
+              { header: "Note",     key: "note",     width: 30 },
+              { header: "Amount",   key: "amount",   width: 14 },
+              { header: "Account",  key: "account",  width: 18 },
+              { header: "Category", key: "category", width: 20 },
+            ]}
+            data={txsForExport}
           />
         </div>
       </div>
