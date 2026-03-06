@@ -18,6 +18,7 @@ import { listTransactions } from "@/lib/api/transactions";
 import { CopyBudgetsButton } from "@/components/budgets/CopyBudgetsButton";
 import { getIntelligence } from "@/lib/api/intelligence";
 import { IntelligencePanel } from "./_components/IntelligencePanel";
+import { DashboardBudgetPieChart } from "./_components/DashboardBudgetPieChart";
 
 const DashboardPage = async ({
   searchParams,
@@ -97,9 +98,9 @@ const DashboardPage = async ({
 
         {intelligence && <IntelligencePanel data={intelligence} />}
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <DashboardBudgetProgress kpis={data.kpis} />
-        </div>
+        </div> */}
 
         {/* Transactions Section */}
         <div className="grid grid-cols-1 gap-4 p-4 border bg-card rounded-xl">
@@ -174,7 +175,7 @@ const DashboardPage = async ({
               </div>
             </div>
             <div
-              className={`grid grid-cols-2 divide-x divide-y sm:grid-cols-4 sm:divide-y-0 ${
+              className={`grid grid-cols-2 divide-x divide-y sm:grid-cols-4 sm:divide-y-0 rounded-xl ${
                 data.budgets.totals.isExceeded
                   ? "bg-rose-50 dark:bg-rose-950/20"
                   : "bg-muted/40"
@@ -227,6 +228,10 @@ const DashboardPage = async ({
             </div>
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-5">
               <DashboardIndicator budgetRow={data.budgets.rows} />
+              <DashboardBudgetPieChart
+                rows={data.budgets.rows}
+                totals={data.budgets.totals}
+              />
             </div>
           </div>
         </div>

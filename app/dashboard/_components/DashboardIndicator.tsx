@@ -17,7 +17,7 @@ const DashboardIndicator = ({ budgetRow }: DashboardIndicatorProps) => {
   }
 
   return (
-    <div className="divide-y divide-border border bg-card rounded-xl">
+    <div className="divide-y divide-border border bg-card rounded-xl overflow-auto">
       {budgetRow.map((budget) => {
         const spent = Number(budget.spent);
         const budgeted = Number(budget.budgetResolved);
