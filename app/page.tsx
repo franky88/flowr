@@ -31,33 +31,69 @@ export default function HomePage() {
   return (
     <>
       {/*
-        Scoped styles that reference only your globals.css variables.
-        No hardcoded colours — everything comes from --background,
-        --foreground, --primary, --muted-foreground, --border, etc.
+        Scoped styles — all colours resolved from globals.css tokens.
+
+        Token map (dashboard → globals.css):
+          --green-primary #2d7a4f → --primary             (forest green)
+          --green-mid     #3a9e66 → --chart-2 light       (mid green, gradients)
+          --green-light   #e8f5ee → --secondary / --accent (pale green tint)
+          --green-chip    #c6ecd5 → color-mix primary 30%  (chip border)
+          --green-logo    #5ecf8a → --sidebar-primary      (bright logo green)
+          --bg            #f4f6f4 → --background
+          --card          #ffffff → --card
+          --text          #1a2e22 → --foreground
+          --muted         #7a9485 → --muted-foreground
+          --border        #e4ede8 → --border
+          --expense       #e05c5c → --destructive
+          --warning       #d97c1a → --chart-4
+          --neutral       #4a6fa5 → --chart-5
+          --sidebar-bg    #1a3a2a → --sidebar
       */}
       <style>{`
         /* ── fonts ── */
         @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
 
-        /* ── page-level aliases (read from your globals.css theme vars) ── */
+        /* ── page-level aliases ── */
         .lp {
-          --lp-bg:          var(--background);
-          --lp-surface:     var(--card);
-          --lp-surface2:    var(--popover);
-          --lp-fg:          var(--foreground);
-          --lp-muted:       var(--muted-foreground);
-          --lp-dim:         color-mix(in oklch, var(--muted-foreground) 60%, transparent);
-          --lp-border:      var(--border);
-          --lp-border-lt:   var(--input);
+          /* Surfaces */
+          --lp-bg:        var(--background);           /* #f4f6f4 / dark #0c0c0a  */
+          --lp-surface:   var(--card);                 /* #ffffff / dark #141410  */
+          --lp-surface2:  var(--popover);              /* #ffffff / dark #1c1c17  */
+          --lp-fg:        var(--foreground);           /* #1a2e22 / dark #f0ede6  */
+          --lp-muted:     var(--muted-foreground);     /* #7a9485                 */
+          --lp-dim:       color-mix(in oklch, var(--muted-foreground) 55%, transparent);
+          --lp-border:    var(--border);               /* #e4ede8                 */
+          --lp-border-lt: var(--input);
+
+          /* Primary green — forest #2d7a4f (light) / #5ecf8a (dark) */
           --lp-accent:      var(--primary);
-          --lp-accent-dim:  color-mix(in oklch, var(--primary) 12%, transparent);
-          --lp-accent-bdr:  color-mix(in oklch, var(--primary) 30%, transparent);
-          --lp-red:         var(--destructive);
+          --lp-accent-fg:   var(--primary-foreground); /* white (light) / dark (dark) */
+
+          /* Pale green tint for chip backgrounds — #e8f5ee (light) */
+          --lp-accent-dim:  var(--secondary);          /* oklch(0.958 0.038 152)  */
+          --lp-accent-bdr:  color-mix(in oklch, var(--primary) 28%, transparent);
+
+          /* Bright logo green for decorative hits — #5ecf8a */
+          --lp-green-logo:  var(--sidebar-primary);    /* oklch(0.742 0.152 152)  */
+
+          /* Mid green for gradients — #3a9e66 */
+          --lp-green-mid:   var(--chart-2);
+
+          /* Semantics */
+          --lp-red:         var(--destructive);        /* #e05c5c / #f05a5a       */
           --lp-red-dim:     color-mix(in oklch, var(--destructive) 10%, transparent);
-          --lp-mono:        'DM Mono', monospace;
-          --lp-display:     'Playfair Display', serif;
-          --lp-sans:        'DM Sans', var(--font-sans), sans-serif;
-          --lp-radius:      var(--radius);
+          --lp-amber:       var(--chart-4);            /* #d97c1a                 */
+          --lp-blue:        var(--chart-5);            /* #4a6fa5                 */
+
+          /* Dark forest for hero sections */
+          --lp-forest:      var(--sidebar);            /* #1a3a2a (both modes)    */
+          --lp-forest-fg:   var(--sidebar-foreground);
+
+          /* Typography */
+          --lp-mono:    'DM Mono', monospace;
+          --lp-display: 'Playfair Display', serif;
+          --lp-sans:    'DM Sans', var(--font-sans), sans-serif;
+          --lp-radius:  var(--radius);                 /* 1rem = 16px             */
 
           background: var(--lp-bg);
           color: var(--lp-fg);
@@ -68,7 +104,7 @@ export default function HomePage() {
           position: relative;
         }
 
-        /* subtle grid bg overlay */
+        /* Subtle grid overlay */
         .lp::before {
           content: '';
           position: fixed; inset: 0;
@@ -84,57 +120,89 @@ export default function HomePage() {
         .lp-nav {
           position: fixed; top: 0; left: 0; right: 0; z-index: 100;
           display: flex; align-items: center; justify-content: space-between;
-          padding: 20px 48px;
-          background: color-mix(in oklch, var(--lp-bg) 85%, transparent);
-          backdrop-filter: blur(12px);
+          padding: 0 48px; height: 64px;
+          background: color-mix(in oklch, var(--lp-bg) 88%, transparent);
+          backdrop-filter: blur(16px);
           border-bottom: 1px solid var(--lp-border);
+          box-shadow: 0 1px 0 color-mix(in oklch, var(--lp-fg) 4%, transparent),
+                      0 2px 16px color-mix(in oklch, var(--lp-fg) 5%, transparent);
         }
         .lp-logo {
-          font-family: var(--lp-display);
-          font-size: 1.4rem; font-style: italic;
-          color: var(--lp-fg); letter-spacing: -0.01em;
+          display: flex; align-items: center; gap: 10px;
         }
-        .lp-logo span { color: var(--lp-accent); font-style: normal; }
-        .lp-nav-links { display: flex; gap: 32px; list-style: none; }
+        .lp-logo-mark {
+          width: 32px; height: 32px;
+          background: linear-gradient(135deg, var(--lp-green-logo) 0%, var(--lp-accent) 100%);
+          border-radius: 9px;
+          display: flex; align-items: center; justify-content: center;
+          font-weight: 800; font-size: 13px; color: white;
+          box-shadow: 0 3px 10px color-mix(in oklch, var(--lp-accent) 40%, transparent);
+        }
+        .lp-logo-text {
+          font-size: 17px; font-weight: 800; letter-spacing: -0.3px;
+          color: var(--lp-fg);
+        }
+        .lp-nav-links { display: flex; gap: 4px; list-style: none; }
         .lp-nav-links a {
-          font-family: var(--lp-mono); font-size: 0.72rem;
+          font-size: 13px; font-weight: 500;
           color: var(--lp-muted); text-decoration: none;
-          letter-spacing: 0.08em; text-transform: uppercase;
-          transition: color 0.2s;
+          padding: 7px 14px; border-radius: 7px;
+          transition: color 0.15s, background 0.15s;
         }
-        .lp-nav-links a:hover { color: var(--lp-fg); }
+        .lp-nav-links a:hover {
+          color: var(--lp-fg);
+          background: var(--lp-accent-dim);
+        }
 
         /* ── BUTTONS ── */
         .btn-cta {
-          font-family: var(--lp-mono); font-size: 0.72rem;
-          letter-spacing: 0.06em; text-transform: uppercase;
-          background: var(--lp-accent); color: var(--primary-foreground);
-          border: none; padding: 10px 20px;
-          border-radius: var(--lp-radius);
-          cursor: pointer; font-weight: 500;
-          transition: opacity 0.2s, transform 0.15s;
+          display: flex; align-items: center; gap: 7px;
+          background: linear-gradient(135deg, var(--lp-green-mid), var(--lp-accent));
+          color: white;
+          border: none; padding: 9px 18px; border-radius: 10px;
+          font-size: 13px; font-weight: 700;
+          font-family: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
+          cursor: pointer;
+          box-shadow: 0 4px 14px color-mix(in oklch, var(--lp-accent) 35%, transparent);
+          transition: transform 0.15s, box-shadow 0.15s;
         }
-        .btn-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+        .btn-cta:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px color-mix(in oklch, var(--lp-accent) 45%, transparent);
+        }
 
         .btn-primary {
-          font-family: var(--lp-mono); font-size: 0.78rem;
-          letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500;
-          background: var(--lp-accent); color: var(--primary-foreground);
-          border: none; padding: 14px 28px;
-          border-radius: var(--lp-radius);
-          cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+          display: flex; align-items: center; gap: 7px;
+          background: linear-gradient(135deg, var(--lp-green-mid), var(--lp-accent));
+          color: white;
+          border: none; padding: 12px 24px; border-radius: 10px;
+          font-size: 14px; font-weight: 700;
+          font-family: 'DM Sans', sans-serif;
+          cursor: pointer;
+          box-shadow: 0 4px 16px color-mix(in oklch, var(--lp-accent) 35%, transparent);
+          transition: transform 0.15s, box-shadow 0.15s;
         }
-        .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px color-mix(in oklch, var(--lp-accent) 45%, transparent);
+        }
 
         .btn-ghost {
-          font-family: var(--lp-mono); font-size: 0.78rem;
-          letter-spacing: 0.06em; text-transform: uppercase;
-          background: transparent; color: var(--lp-muted);
-          border: 1px solid var(--lp-border-lt);
-          padding: 14px 28px; border-radius: var(--lp-radius);
-          cursor: pointer; transition: border-color 0.2s, color 0.2s;
+          display: flex; align-items: center; gap: 7px;
+          background: var(--lp-surface);
+          color: var(--lp-fg);
+          border: 1px solid var(--lp-border);
+          padding: 12px 20px; border-radius: 10px;
+          font-size: 14px; font-weight: 600;
+          font-family: 'DM Sans', sans-serif;
+          cursor: pointer;
+          box-shadow: 0 2px 8px color-mix(in oklch, var(--lp-fg) 5%, transparent);
+          transition: border-color 0.15s, color 0.15s;
         }
-        .btn-ghost:hover { border-color: var(--lp-muted); color: var(--lp-fg); }
+        .btn-ghost:hover {
+          border-color: var(--lp-accent);
+          color: var(--lp-accent);
+        }
 
         /* ── HERO ── */
         .lp-hero {
@@ -142,192 +210,313 @@ export default function HomePage() {
           min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
           padding: 140px 48px 80px; max-width: 1200px; margin: 0 auto;
         }
-        .hero-tag {
-          font-family: var(--lp-mono); font-size: 0.68rem;
-          letter-spacing: 0.14em; text-transform: uppercase;
-          color: var(--lp-accent); margin-bottom: 24px;
+        .hero-eyebrow {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: var(--lp-accent-dim);
+          border: 1px solid var(--lp-accent-bdr);
+          border-radius: 99px; padding: 5px 14px;
+          font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+          color: var(--lp-accent);
+          margin-bottom: 28px;
           opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
+        }
+        .hero-eyebrow-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: var(--lp-accent);
         }
         .hero-title {
           font-family: var(--lp-display);
-          font-size: clamp(3.5rem, 7vw, 7rem);
+          font-size: clamp(3.2rem, 6.5vw, 6.5rem);
           line-height: 1.0; letter-spacing: -0.02em;
           color: var(--lp-fg); max-width: 820px;
           opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
         }
-        .hero-title em { font-style: italic; color: var(--lp-accent); }
+        .hero-title em {
+          font-style: italic;
+          color: var(--lp-accent);
+          text-decoration: underline;
+          text-decoration-color: color-mix(in oklch, var(--lp-accent) 35%, transparent);
+          text-underline-offset: 6px;
+        }
         .hero-sub {
           margin-top: 28px; font-size: 1.05rem;
           color: var(--lp-muted); max-width: 480px; line-height: 1.7;
           opacity: 0; animation: fadeUp 0.7s ease forwards 0.35s;
         }
         .hero-actions {
-          display: flex; gap: 16px; margin-top: 44px;
+          display: flex; gap: 12px; margin-top: 44px;
           opacity: 0; animation: fadeUp 0.7s ease forwards 0.5s;
         }
+
+        /* KPI stat strip */
         .hero-stats {
-          display: flex; gap: 0; margin-top: 72px;
-          border: 1px solid var(--lp-border); border-radius: var(--lp-radius);
+          display: flex; margin-top: 64px;
+          background: var(--lp-surface);
+          border: 1px solid var(--lp-border);
+          border-radius: var(--lp-radius);
           overflow: hidden;
+          box-shadow: 0 2px 16px color-mix(in oklch, var(--lp-fg) 6%, transparent);
           opacity: 0; animation: fadeUp 0.7s ease forwards 0.65s;
         }
-        .stat { flex: 1; padding: 20px 28px; border-right: 1px solid var(--lp-border); }
-        .stat:last-child { border-right: none; }
-        .stat-label {
-          font-family: var(--lp-mono); font-size: 0.6rem;
-          letter-spacing: 0.12em; text-transform: uppercase;
-          color: var(--lp-dim); margin-bottom: 6px;
+        .stat {
+          flex: 1; padding: 20px 24px;
+          border-right: 1px solid var(--lp-border);
+          position: relative;
         }
-        .stat-value { font-family: var(--lp-mono); font-size: 1.3rem; font-weight: 500; }
+        .stat:last-child { border-right: none; }
+        .stat-icon-wrap {
+          width: 36px; height: 36px; border-radius: 10px;
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 12px; font-size: 16px;
+        }
+        .stat.income  .stat-icon-wrap { background: var(--lp-accent-dim); }
+        .stat.expense .stat-icon-wrap { background: color-mix(in oklch, var(--lp-red) 10%, transparent); }
+        .stat.neutral .stat-icon-wrap { background: color-mix(in oklch, var(--lp-blue) 12%, transparent); }
+        .stat.balance .stat-icon-wrap { background: var(--lp-accent-dim); }
+        .stat-label {
+          font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+          text-transform: uppercase; color: var(--lp-muted); margin-bottom: 6px;
+        }
+        .stat-value {
+          font-family: var(--lp-mono); font-size: 1.25rem; font-weight: 600;
+          letter-spacing: -0.5px;
+        }
         .stat-value.green   { color: var(--lp-accent); }
         .stat-value.red     { color: var(--lp-red); }
         .stat-value.neutral { color: var(--lp-fg); }
-        .stat-delta { font-family: var(--lp-mono); font-size: 0.65rem; color: var(--lp-dim); margin-top: 2px; }
+        .stat-badge {
+          display: inline-flex; align-items: center; gap: 3px;
+          font-family: var(--lp-mono); font-size: 10px; font-weight: 600;
+          padding: 3px 8px; border-radius: 20px; margin-top: 6px;
+        }
+        .badge-up      { background: var(--lp-accent-dim); color: var(--lp-accent); }
+        .badge-down    { background: color-mix(in oklch, var(--lp-red) 10%, transparent); color: var(--lp-red); }
+        .badge-neutral { background: color-mix(in oklch, var(--lp-blue) 12%, transparent); color: var(--lp-blue); }
 
         /* ── FORMULA BAND ── */
         .formula-band {
           position: relative; z-index: 1;
-          background: var(--lp-surface);
-          border-top: 1px solid var(--lp-border); border-bottom: 1px solid var(--lp-border);
-          padding: 28px 48px; overflow: hidden;
+          background: var(--lp-forest);
+          padding: 22px 48px; overflow: hidden;
+        }
+        .formula-band::before {
+          content: '';
+          position: absolute; top: -60px; right: -40px;
+          width: 200px; height: 200px;
+          background: radial-gradient(circle, color-mix(in oklch, var(--lp-green-logo) 25%, transparent) 0%, transparent 70%);
+          border-radius: 50%; pointer-events: none;
         }
         .formula-inner {
+          position: relative; z-index: 1;
           max-width: 1200px; margin: 0 auto;
-          display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+          display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
         }
         .formula-label {
           font-family: var(--lp-mono); font-size: 0.6rem;
           letter-spacing: 0.12em; text-transform: uppercase;
-          color: var(--lp-dim); margin-right: 8px;
+          color: color-mix(in oklch, white 35%, transparent); margin-right: 8px;
         }
-        .formula-part { font-family: var(--lp-mono); font-size: 1rem; color: var(--lp-muted); }
-        .formula-part.hi     { color: var(--lp-fg); font-weight: 500; }
-        .formula-part.accent { color: var(--lp-accent); font-weight: 500; }
-        .formula-part.debit  { color: var(--lp-red); font-weight: 500; }
-        .formula-op { font-family: var(--lp-mono); font-size: 1rem; color: var(--lp-dim); padding: 0 4px; }
+        .formula-part { font-family: var(--lp-mono); font-size: 1rem; color: color-mix(in oklch, white 60%, transparent); }
+        .formula-part.hi     { color: white; font-weight: 500; }
+        .formula-part.accent { color: var(--lp-green-logo); font-weight: 500; }
+        .formula-part.debit  { color: color-mix(in oklch, var(--lp-red) 80%, white); font-weight: 500; }
+        .formula-op { font-family: var(--lp-mono); font-size: 1rem; color: color-mix(in oklch, white 30%, transparent); padding: 0 4px; }
 
         /* ── SECTIONS ── */
         .lp-section {
           position: relative; z-index: 1;
           max-width: 1200px; margin: 0 auto; padding: 96px 48px;
         }
-        .section-header { margin-bottom: 60px; }
-        .section-tag {
-          font-family: var(--lp-mono); font-size: 0.62rem;
-          letter-spacing: 0.14em; text-transform: uppercase;
-          color: var(--lp-accent); margin-bottom: 16px;
+        .section-header { margin-bottom: 56px; }
+        .section-eyebrow {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: var(--lp-accent-dim);
+          border: 1px solid var(--lp-accent-bdr);
+          border-radius: 99px; padding: 5px 12px;
+          font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+          color: var(--lp-accent); margin-bottom: 20px;
         }
+        .section-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lp-accent); }
         .section-title {
           font-family: var(--lp-display);
-          font-size: clamp(2rem, 4vw, 3.5rem);
+          font-size: clamp(2rem, 4vw, 3.2rem);
           line-height: 1.1; letter-spacing: -0.02em; max-width: 600px;
         }
         .section-title em { font-style: italic; color: var(--lp-muted); }
 
         /* ── FEATURES ── */
         .features-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr);
-          gap: 1px; background: var(--lp-border);
-          border: 1px solid var(--lp-border); border-radius: var(--lp-radius); overflow: hidden;
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
         }
-        .feature-card { background: var(--lp-surface); padding: 36px 32px; transition: background 0.2s; }
-        .feature-card:hover { background: var(--lp-surface2); }
-        .feature-icon {
-          font-family: var(--lp-mono); font-size: 0.68rem; letter-spacing: 0.1em;
-          color: var(--lp-accent); background: var(--lp-accent-dim);
+        .feature-card {
+          background: var(--lp-surface);
+          border: 1px solid var(--lp-border);
+          border-radius: var(--lp-radius);
+          padding: 28px 24px;
+          box-shadow: 0 2px 12px color-mix(in oklch, var(--lp-fg) 5%, transparent);
+          position: relative; overflow: hidden;
+          transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+        }
+        .feature-card::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: linear-gradient(135deg, color-mix(in oklch, var(--lp-accent) 4%, transparent) 0%, transparent 60%);
+          opacity: 0; transition: opacity 0.2s;
+        }
+        .feature-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 40px color-mix(in oklch, var(--lp-fg) 10%, transparent);
+          border-color: var(--lp-accent-bdr);
+        }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-icon-tag {
+          display: inline-flex; align-items: center; gap: 5px;
+          background: var(--lp-accent-dim);
           border: 1px solid var(--lp-accent-bdr);
-          display: inline-block; padding: 4px 10px; border-radius: 2px; margin-bottom: 20px;
+          color: var(--lp-accent);
+          font-size: 10.5px; font-weight: 700;
+          font-family: var(--lp-mono); letter-spacing: 0.06em;
+          padding: 5px 10px; border-radius: 7px; margin-bottom: 20px;
         }
-        .feature-title { font-family: var(--lp-display); font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
-        .feature-desc  { font-size: 0.88rem; color: var(--lp-muted); line-height: 1.65; }
+        .feature-title {
+          font-size: 15px; font-weight: 800; letter-spacing: -0.02em;
+          margin-bottom: 10px; color: var(--lp-fg);
+        }
+        .feature-desc { font-size: 0.85rem; color: var(--lp-muted); line-height: 1.65; }
 
-        /* ── PREVIEW TABLE ── */
+        /* ── PREVIEW ── */
         .preview-section {
           position: relative; z-index: 1;
-          background: var(--lp-surface);
-          border-top: 1px solid var(--lp-border); border-bottom: 1px solid var(--lp-border);
+          background: var(--lp-forest);
           padding: 80px 0; overflow: hidden;
         }
-        .preview-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+        .preview-section::before {
+          content: '';
+          position: absolute; top: -80px; left: 50%;
+          transform: translateX(-50%);
+          width: 600px; height: 400px;
+          background: radial-gradient(ellipse, color-mix(in oklch, var(--lp-green-logo) 15%, transparent) 0%, transparent 65%);
+          pointer-events: none;
+        }
+        .preview-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+        .preview-inner .section-eyebrow {
+          background: color-mix(in oklch, var(--lp-green-logo) 15%, transparent);
+          border-color: color-mix(in oklch, var(--lp-green-logo) 25%, transparent);
+          color: var(--lp-green-logo);
+        }
+        .preview-inner .section-eyebrow-dot { background: var(--lp-green-logo); }
+        .preview-inner .section-title { color: white; }
+        .preview-inner .section-title em { color: color-mix(in oklch, white 50%, transparent); }
+
         .mock-table {
-          margin-top: 48px; border: 1px solid var(--lp-border);
+          margin-top: 48px;
+          border: 1px solid color-mix(in oklch, white 10%, transparent);
           border-radius: var(--lp-radius); overflow: hidden;
           font-family: var(--lp-mono); font-size: 0.78rem;
+          background: color-mix(in oklch, white 6%, transparent);
         }
         .mock-header {
           display: grid; grid-template-columns: 100px 1fr 130px 130px 130px;
-          background: var(--lp-surface2); border-bottom: 1px solid var(--lp-border);
+          background: color-mix(in oklch, white 5%, transparent);
+          border-bottom: 1px solid color-mix(in oklch, white 10%, transparent);
         }
         .mock-th {
           padding: 12px 16px; font-size: 0.6rem; letter-spacing: 0.1em;
-          text-transform: uppercase; color: var(--lp-dim);
-          border-right: 1px solid var(--lp-border);
+          text-transform: uppercase; color: color-mix(in oklch, white 35%, transparent);
+          border-right: 1px solid color-mix(in oklch, white 8%, transparent);
         }
         .mock-th:last-child { border-right: none; }
         .mock-row {
           display: grid; grid-template-columns: 100px 1fr 130px 130px 130px;
-          border-bottom: 1px solid var(--lp-border); transition: background 0.15s;
+          border-bottom: 1px solid color-mix(in oklch, white 8%, transparent);
+          transition: background 0.15s;
         }
         .mock-row:last-child { border-bottom: none; }
-        .mock-row:hover { background: color-mix(in oklch, var(--lp-fg) 2%, transparent); }
+        .mock-row:hover { background: color-mix(in oklch, white 5%, transparent); }
         .mock-td {
-          padding: 13px 16px; color: var(--lp-muted);
-          border-right: 1px solid var(--lp-border); white-space: nowrap;
+          padding: 13px 16px; color: color-mix(in oklch, white 50%, transparent);
+          border-right: 1px solid color-mix(in oklch, white 7%, transparent);
+          white-space: nowrap;
         }
         .mock-td:last-child { border-right: none; }
-        .mock-td.date    { color: var(--lp-dim); font-size: 0.72rem; }
-        .mock-td.desc    { color: var(--lp-fg); }
-        .mock-td.income  { color: var(--lp-accent); }
-        .mock-td.expense { color: var(--lp-red); }
-        .mock-td.balance { color: var(--lp-fg); font-weight: 500; }
+        .mock-td.date    { color: color-mix(in oklch, white 30%, transparent); font-size: 0.72rem; }
+        .mock-td.desc    { color: color-mix(in oklch, white 85%, transparent); }
+        .mock-td.income  { color: var(--lp-green-logo); }
+        .mock-td.expense { color: color-mix(in oklch, var(--lp-red) 80%, white); }
+        .mock-td.balance { color: white; font-weight: 500; }
         .mock-td.cat-cell { display: flex; align-items: center; }
         .cat-chip {
-          background: var(--lp-accent-dim); border: 1px solid var(--lp-accent-bdr);
-          color: var(--lp-accent); padding: 2px 8px; border-radius: 2px;
-          font-size: 0.62rem; letter-spacing: 0.06em;
+          background: color-mix(in oklch, var(--lp-green-logo) 15%, transparent);
+          border: 1px solid color-mix(in oklch, var(--lp-green-logo) 25%, transparent);
+          color: var(--lp-green-logo);
+          padding: 2px 9px; border-radius: 6px;
+          font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
         }
         .cat-chip.red {
-          background: var(--lp-red-dim);
+          background: color-mix(in oklch, var(--lp-red) 12%, transparent);
           border-color: color-mix(in oklch, var(--lp-red) 25%, transparent);
-          color: var(--lp-red);
+          color: color-mix(in oklch, var(--lp-red) 80%, white);
         }
 
-        /* ── BUDGET ── */
-        .budget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+        /* ── BUDGET GRID ── */
+        .budget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
         .budget-card {
-          border: 1px solid var(--lp-border); border-radius: var(--lp-radius);
-          padding: 24px 28px; background: var(--lp-surface);
+          border: 1px solid color-mix(in oklch, white 10%, transparent);
+          border-radius: var(--lp-radius); padding: 22px 24px;
+          background: color-mix(in oklch, white 6%, transparent);
         }
         .budget-card-title {
           font-family: var(--lp-mono); font-size: 0.6rem; letter-spacing: 0.12em;
-          text-transform: uppercase; color: var(--lp-dim); margin-bottom: 20px;
+          text-transform: uppercase; color: color-mix(in oklch, white 35%, transparent);
+          margin-bottom: 18px;
         }
         .budget-row {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 10px 0; border-bottom: 1px solid var(--lp-border); gap: 16px;
+          padding: 10px 0; border-bottom: 1px solid color-mix(in oklch, white 7%, transparent); gap: 14px;
         }
         .budget-row:last-child { border-bottom: none; padding-bottom: 0; }
-        .budget-cat { font-family: var(--lp-mono); font-size: 0.75rem; color: var(--lp-muted); flex: 1; }
+        .budget-cat { font-family: var(--lp-mono); font-size: 0.75rem; color: color-mix(in oklch, white 55%, transparent); flex: 1; }
         .budget-bar-wrap {
-          flex: 2; height: 4px;
-          background: color-mix(in oklch, var(--lp-fg) 6%, transparent);
-          border-radius: 2px; overflow: hidden;
+          flex: 2; height: 6px;
+          background: color-mix(in oklch, white 8%, transparent);
+          border-radius: 99px; overflow: hidden;
         }
-        .budget-bar { height: 100%; border-radius: 2px; background: var(--lp-accent); transition: width 1s ease; }
-        .budget-bar.over { background: var(--lp-red); }
-        .budget-pct { font-family: var(--lp-mono); font-size: 0.68rem; color: var(--lp-dim); width: 36px; text-align: right; }
-        .budget-pct.over { color: var(--lp-red); }
+        .budget-bar {
+          height: 100%; border-radius: 99px;
+          background: linear-gradient(90deg, var(--lp-green-logo), var(--lp-accent));
+          transition: width 1s ease;
+        }
+        .budget-bar.warn { background: linear-gradient(90deg, #ffc107, var(--lp-amber)); }
+        .budget-bar.over { background: linear-gradient(90deg, #ff8080, var(--lp-red)); }
+        .budget-pct { font-family: var(--lp-mono); font-size: 0.68rem; color: color-mix(in oklch, white 35%, transparent); width: 36px; text-align: right; }
+        .budget-pct.over { color: color-mix(in oklch, var(--lp-red) 80%, white); }
 
         /* ── HOW IT WORKS ── */
         .steps {
-          display: grid; grid-template-columns: repeat(4, 1fr);
-          gap: 1px; background: var(--lp-border);
-          border: 1px solid var(--lp-border); border-radius: var(--lp-radius);
-          overflow: hidden; margin-top: 48px;
+          display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+          margin-top: 48px;
         }
-        .step { background: var(--lp-surface); padding: 32px 28px; }
-        .step-num   { font-family: var(--lp-mono); font-size: 0.6rem; letter-spacing: 0.12em; color: var(--lp-dim); margin-bottom: 16px; }
-        .step-title { font-family: var(--lp-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+        .step {
+          background: var(--lp-surface);
+          border: 1px solid var(--lp-border);
+          border-radius: var(--lp-radius); padding: 26px 22px;
+          box-shadow: 0 2px 8px color-mix(in oklch, var(--lp-fg) 5%, transparent);
+          transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .step:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 24px color-mix(in oklch, var(--lp-fg) 10%, transparent);
+        }
+        .step-num {
+          width: 36px; height: 36px;
+          background: var(--lp-accent-dim);
+          border: 1px solid var(--lp-accent-bdr);
+          border-radius: 9px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 11px; font-weight: 800; color: var(--lp-accent);
+          font-family: var(--lp-mono); margin-bottom: 18px;
+        }
+        .step-title { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; color: var(--lp-fg); }
         .step-desc  { font-size: 0.83rem; color: var(--lp-muted); line-height: 1.6; }
 
         /* ── CTA ── */
@@ -335,25 +524,72 @@ export default function HomePage() {
           position: relative; z-index: 1; text-align: center;
           padding: 100px 48px; max-width: 1200px; margin: 0 auto;
         }
-        .cta-section .section-title { max-width: 100%; text-align: center; }
-        .cta-sub { margin-top: 20px; color: var(--lp-muted); font-size: 1rem; text-align: center; }
-        .cta-actions { display: flex; gap: 16px; justify-content: center; margin-top: 40px; }
-        .cta-glow {
-          position: absolute; top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          width: 600px; height: 300px;
-          background: radial-gradient(ellipse at center, var(--lp-accent-dim) 0%, transparent 70%);
+        .cta-card {
+          background: var(--lp-forest);
+          border-radius: 24px; padding: 72px 48px;
+          position: relative; overflow: hidden;
+          box-shadow: 0 24px 64px color-mix(in oklch, var(--lp-fg) 14%, transparent);
+        }
+        .cta-card::before {
+          content: '';
+          position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+          width: 600px; height: 400px;
+          background: radial-gradient(ellipse, color-mix(in oklch, var(--lp-green-logo) 15%, transparent) 0%, transparent 65%);
           pointer-events: none;
+        }
+        .cta-eyebrow {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: color-mix(in oklch, var(--lp-green-logo) 15%, transparent);
+          border: 1px solid color-mix(in oklch, var(--lp-green-logo) 25%, transparent);
+          border-radius: 99px; padding: 5px 14px;
+          font-size: 11px; font-weight: 700; color: var(--lp-green-logo);
+          margin-bottom: 24px; position: relative; z-index: 1;
+        }
+        .cta-title {
+          font-family: var(--lp-display);
+          font-size: clamp(2rem, 4vw, 3.2rem);
+          color: white; line-height: 1.1; letter-spacing: -0.02em;
+          position: relative; z-index: 1; margin-bottom: 16px;
+        }
+        .cta-title em { font-style: italic; color: var(--lp-green-logo); }
+        .cta-sub {
+          color: color-mix(in oklch, white 55%, transparent);
+          font-size: 1rem; max-width: 480px; margin: 0 auto 36px;
+          position: relative; z-index: 1;
+        }
+        .cta-actions {
+          display: flex; gap: 12px; justify-content: center;
+          position: relative; z-index: 1;
         }
 
         /* ── FOOTER ── */
         .lp-footer {
           position: relative; z-index: 1;
-          border-top: 1px solid var(--lp-border);
-          padding: 32px 48px; display: flex; align-items: center; justify-content: space-between;
+          background: var(--lp-forest);
+          border-top: 1px solid color-mix(in oklch, white 8%, transparent);
+          padding: 32px 48px;
+          display: flex; align-items: center; justify-content: space-between;
         }
-        .footer-logo { font-family: var(--lp-display); font-style: italic; font-size: 1.1rem; color: var(--lp-dim); }
-        .footer-copy { font-family: var(--lp-mono); font-size: 0.62rem; letter-spacing: 0.08em; color: var(--lp-dim); }
+        .footer-logo { display: flex; align-items: center; gap: 9px; }
+        .footer-logo-mark {
+          width: 26px; height: 26px;
+          background: linear-gradient(135deg, var(--lp-green-logo) 0%, var(--lp-accent) 100%);
+          border-radius: 7px;
+          display: flex; align-items: center; justify-content: center;
+          font-weight: 800; font-size: 11px; color: white;
+        }
+        .footer-logo-text { font-size: 15px; font-weight: 700; color: color-mix(in oklch, white 70%, transparent); }
+        .footer-copy {
+          font-family: var(--lp-mono); font-size: 11px;
+          color: color-mix(in oklch, white 25%, transparent); letter-spacing: 0.04em;
+        }
+        .footer-links { display: flex; gap: 20px; list-style: none; }
+        .footer-links a {
+          font-size: 12.5px; font-weight: 500;
+          color: color-mix(in oklch, white 35%, transparent);
+          text-decoration: none; transition: color 0.15s;
+        }
+        .footer-links a:hover { color: color-mix(in oklch, white 70%, transparent); }
 
         /* ── ANIMATIONS ── */
         @keyframes fadeUp {
@@ -365,9 +601,12 @@ export default function HomePage() {
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-          .lp-nav { padding: 16px 24px; }
+          .lp-nav { padding: 0 24px; }
           .lp-nav-links { display: none; }
           .lp-hero { padding: 120px 24px 60px; }
+          .hero-stats { flex-direction: column; }
+          .stat { border-right: none; border-bottom: 1px solid var(--lp-border); }
+          .stat:last-child { border-bottom: none; }
           .lp-section { padding: 64px 24px; }
           .features-grid { grid-template-columns: 1fr; }
           .mock-header, .mock-row { grid-template-columns: 80px 1fr 100px 100px; }
@@ -378,6 +617,7 @@ export default function HomePage() {
           .formula-band { padding: 20px 24px; }
           .preview-inner { padding: 0 24px; }
           .cta-section { padding: 64px 24px; }
+          .cta-card { padding: 48px 24px; }
         }
       `}</style>
 
@@ -385,23 +625,16 @@ export default function HomePage() {
         {/* ── NAV ── */}
         <nav className="lp-nav">
           <div className="lp-logo">
-            Flowr<span>.</span>
+            <div className="lp-logo-mark">F</div>
+            <span className="lp-logo-text">Flowr</span>
           </div>
           <ul className="lp-nav-links">
-            <li>
-              <a href="#features">Features</a>
-            </li>
-            <li>
-              <a href="#preview">Preview</a>
-            </li>
-            <li>
-              <a href="/pricing">Pricing</a>
-            </li>
-            <li>
-              <a href="#how">How it works</a>
-            </li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#preview">Preview</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="#how">How it works</a></li>
           </ul>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <ThemeToggle />
             <SignedOut>
               <SignUpButton mode="modal">
@@ -419,8 +652,9 @@ export default function HomePage() {
 
         {/* ── HERO ── */}
         <section className="lp-hero">
-          <div className="hero-tag">
-            Personal Cashflow Tracker — Account-Scoped, Transaction-First
+          <div className="hero-eyebrow">
+            <span className="hero-eyebrow-dot" />
+            Personal Cashflow Tracker — Transaction-First
           </div>
           <h1 className="hero-title">
             Replace your
@@ -455,35 +689,16 @@ export default function HomePage() {
 
           <div className="hero-stats">
             {[
-              {
-                label: "Opening Balance",
-                value: "₱ 42,500.00",
-                tone: "neutral",
-                delta: "Feb 2026",
-              },
-              {
-                label: "Total Income",
-                value: "+ ₱ 65,000.00",
-                tone: "green",
-                delta: "3 transactions",
-              },
-              {
-                label: "Total Expenses",
-                value: "− ₱ 38,240.00",
-                tone: "red",
-                delta: "14 transactions",
-              },
-              {
-                label: "Net Balance",
-                value: "₱ 69,260.00",
-                tone: "green",
-                delta: "↑ Surplus month",
-              },
+              { label: "Opening Balance", value: "₱ 42,500.00", tone: "neutral", badge: "Feb 2026", badgeTone: "neutral", icon: "🏦", cls: "neutral" },
+              { label: "Total Income",    value: "+ ₱ 65,000.00", tone: "green",   badge: "3 transactions", badgeTone: "up",   icon: "↑", cls: "income" },
+              { label: "Total Expenses",  value: "− ₱ 38,240.00", tone: "red",     badge: "14 transactions", badgeTone: "down", icon: "↓", cls: "expense" },
+              { label: "Net Balance",     value: "₱ 69,260.00",  tone: "green",   badge: "↑ Surplus", badgeTone: "up", icon: "✓", cls: "balance" },
             ].map((s) => (
-              <div key={s.label} className="stat">
+              <div key={s.label} className={`stat ${s.cls}`}>
+                <div className="stat-icon-wrap">{s.icon}</div>
                 <div className="stat-label">{s.label}</div>
                 <div className={`stat-value ${s.tone}`}>{s.value}</div>
-                <div className="stat-delta">{s.delta}</div>
+                <div className={`stat-badge badge-${s.badgeTone}`}>{s.badge}</div>
               </div>
             ))}
           </div>
@@ -500,22 +715,18 @@ export default function HomePage() {
             <span className="formula-part debit">Expenses</span>
             <span className="formula-op">=</span>
             <span className="formula-part hi">Running Balance</span>
-            <span className="formula-op" style={{ marginLeft: "auto" }}>
-              ·
-            </span>
-            <span
-              className="formula-part"
-              style={{ fontSize: "0.72rem", color: "var(--lp-dim)" }}
-            >
-              Computed daily. Never stored.
-            </span>
+            <span className="formula-op" style={{ marginLeft: "auto" }}>·</span>
+            <span className="formula-part" style={{ fontSize: "0.72rem" }}>Computed daily. Never stored.</span>
           </div>
         </div>
 
         {/* ── FEATURES ── */}
         <section className="lp-section" id="features">
           <div className="section-header reveal">
-            <div className="section-tag">Core Features</div>
+            <div className="section-eyebrow">
+              <span className="section-eyebrow-dot" />
+              Core Features
+            </div>
             <h2 className="section-title">
               Built on one
               <br />
@@ -524,39 +735,15 @@ export default function HomePage() {
           </div>
           <div className="features-grid reveal">
             {[
-              {
-                icon: "TX",
-                title: "Transactions First",
-                desc: "Every balance, report, and budget is computed from raw transactions. No stored aggregates. No sync issues. One source of truth.",
-              },
-              {
-                icon: "MONTH",
-                title: "Month-Scoped by Design",
-                desc: "Budgets and reports never cross month boundaries. Each month is isolated and independently configurable — per account, not globally.",
-              },
-              {
-                icon: "BUDGET",
-                title: "Smart Budget Rules",
-                desc: "Define budgets as fixed amounts (Internet = ₱900) or as a percentage of each account's income base (Groceries = 20%). Both resolve to live values per account.",
-              },
-              {
-                icon: "ACCT",
-                title: "Account-Level Config",
-                desc: "Income base and opening balance are configured per account, per month. Each account has its own cashflow context — no global overrides.",
-              },
-              {
-                icon: "CAT",
-                title: "Nested Categories",
-                desc: "Organize spending with nested categories. Parent categories roll up child totals automatically across all reports and budget views.",
-              },
-              {
-                icon: "DAILY",
-                title: "Daily Running Balance",
-                desc: "See exactly where your balance stands day-by-day throughout the month. Cashflow gaps are visible before they become problems.",
-              },
+              { icon: "TX",     title: "Transactions First",       desc: "Every balance, report, and budget is computed from raw transactions. No stored aggregates. No sync issues. One source of truth." },
+              { icon: "MONTH",  title: "Month-Scoped by Design",   desc: "Budgets and reports never cross month boundaries. Each month is isolated and independently configurable — per account, not globally." },
+              { icon: "BUDGET", title: "Smart Budget Rules",       desc: "Define budgets as fixed amounts (Internet = ₱900) or as a percentage of each account's income base (Groceries = 20%). Both resolve to live values per account." },
+              { icon: "ACCT",   title: "Account-Level Config",     desc: "Income base and opening balance are configured per account, per month. Each account has its own cashflow context — no global overrides." },
+              { icon: "CAT",    title: "Nested Categories",        desc: "Organize spending with nested categories. Parent categories roll up child totals automatically across all reports and budget views." },
+              { icon: "DAILY",  title: "Daily Running Balance",    desc: "See exactly where your balance stands day-by-day throughout the month. Cashflow gaps are visible before they become problems." },
             ].map((f) => (
               <div key={f.icon} className="feature-card">
-                <div className="feature-icon">{f.icon}</div>
+                <div className="feature-icon-tag">{f.icon}</div>
                 <div className="feature-title">{f.title}</div>
                 <p className="feature-desc">{f.desc}</p>
               </div>
@@ -568,7 +755,10 @@ export default function HomePage() {
         <div className="preview-section" id="preview">
           <div className="preview-inner">
             <div className="section-header reveal">
-              <div className="section-tag">Interface Preview</div>
+              <div className="section-eyebrow">
+                <span className="section-eyebrow-dot" />
+                Interface Preview
+              </div>
               <h2 className="section-title">
                 Tables first.
                 <br />
@@ -578,83 +768,25 @@ export default function HomePage() {
 
             <div className="mock-table reveal">
               <div className="mock-header">
-                {["Date", "Description", "Account", "Amount", "Balance"].map(
-                  (h) => (
-                    <div key={h} className="mock-th">
-                      {h}
-                    </div>
-                  ),
-                )}
+                {["Date", "Description", "Account", "Amount", "Balance"].map((h) => (
+                  <div key={h} className="mock-th">{h}</div>
+                ))}
               </div>
               {[
-                {
-                  date: "Feb 01",
-                  desc: "Monthly Salary",
-                  acct: "BDO Savings",
-                  red: false,
-                  amt: "+ 65,000.00",
-                  income: true,
-                  bal: "107,500.00",
-                },
-                {
-                  date: "Feb 03",
-                  desc: "Meralco Electric",
-                  acct: "GCash",
-                  red: true,
-                  amt: "− 3,200.00",
-                  income: false,
-                  bal: "104,300.00",
-                },
-                {
-                  date: "Feb 05",
-                  desc: "SM Supermarket",
-                  acct: "BDO Savings",
-                  red: true,
-                  amt: "− 5,840.00",
-                  income: false,
-                  bal: "98,460.00",
-                },
-                {
-                  date: "Feb 08",
-                  desc: "Globe Telecom",
-                  acct: "GCash",
-                  red: true,
-                  amt: "− 900.00",
-                  income: false,
-                  bal: "97,560.00",
-                },
-                {
-                  date: "Feb 12",
-                  desc: "Netflix, Spotify",
-                  acct: "BDO Credit",
-                  red: true,
-                  amt: "− 950.00",
-                  income: false,
-                  bal: "96,610.00",
-                },
-                {
-                  date: "Feb 15",
-                  desc: "Freelance Invoice #12",
-                  acct: "BDO Savings",
-                  red: false,
-                  amt: "+ 12,000.00",
-                  income: true,
-                  bal: "108,610.00",
-                },
+                { date: "Feb 01", desc: "Monthly Salary",      acct: "BDO Savings", red: false, amt: "+ 65,000.00", income: true,  bal: "107,500.00" },
+                { date: "Feb 03", desc: "Meralco Electric",    acct: "GCash",        red: true,  amt: "− 3,200.00",  income: false, bal: "104,300.00" },
+                { date: "Feb 05", desc: "SM Supermarket",      acct: "BDO Savings", red: true,  amt: "− 5,840.00",  income: false, bal: "98,460.00"  },
+                { date: "Feb 08", desc: "Globe Telecom",       acct: "GCash",        red: true,  amt: "− 900.00",    income: false, bal: "97,560.00"  },
+                { date: "Feb 12", desc: "Netflix, Spotify",    acct: "BDO Credit",  red: true,  amt: "− 950.00",    income: false, bal: "96,610.00"  },
+                { date: "Feb 15", desc: "Freelance Invoice #12", acct: "BDO Savings", red: false, amt: "+ 12,000.00", income: true, bal: "108,610.00" },
               ].map((row, i) => (
                 <div key={i} className="mock-row">
                   <div className="mock-td date">{row.date}</div>
                   <div className="mock-td desc">{row.desc}</div>
                   <div className="mock-td cat-cell">
-                    <span className={`cat-chip${row.red ? " red" : ""}`}>
-                      {row.acct}
-                    </span>
+                    <span className={`cat-chip${row.red ? " red" : ""}`}>{row.acct}</span>
                   </div>
-                  <div
-                    className={`mock-td ${row.income ? "income" : "expense"}`}
-                  >
-                    {row.amt}
-                  </div>
+                  <div className={`mock-td ${row.income ? "income" : "expense"}`}>{row.amt}</div>
                   <div className="mock-td balance">{row.bal}</div>
                 </div>
               ))}
@@ -664,87 +796,40 @@ export default function HomePage() {
               <div className="budget-card reveal">
                 <div className="budget-card-title">Budget Usage — Feb 2026</div>
                 {[
-                  { cat: "Groceries", pct: 89, over: false },
-                  { cat: "Internet", pct: 100, over: false },
-                  { cat: "Transport", pct: 54, over: false },
-                  { cat: "Dining Out", pct: 124, over: true },
-                  { cat: "Subscriptions", pct: 63, over: false },
+                  { cat: "Groceries",     pct: 89,  tier: ""     },
+                  { cat: "Internet",      pct: 100, tier: "warn"  },
+                  { cat: "Transport",     pct: 54,  tier: ""      },
+                  { cat: "Dining Out",    pct: 124, tier: "over"  },
+                  { cat: "Subscriptions", pct: 63,  tier: ""      },
                 ].map((b) => (
                   <div key={b.cat} className="budget-row">
                     <span className="budget-cat">{b.cat}</span>
                     <div className="budget-bar-wrap">
-                      <div
-                        className={`budget-bar${b.over ? " over" : ""}`}
-                        style={{ width: `${Math.min(b.pct, 100)}%` }}
-                      />
+                      <div className={`budget-bar${b.tier ? ` ${b.tier}` : ""}`} style={{ width: `${Math.min(b.pct, 100)}%` }} />
                     </div>
-                    <span className={`budget-pct${b.over ? " over" : ""}`}>
-                      {b.pct}%
-                    </span>
+                    <span className={`budget-pct${b.tier === "over" ? " over" : ""}`}>{b.pct}%</span>
                   </div>
                 ))}
               </div>
 
               <div className="budget-card reveal">
-                <div className="budget-card-title">
-                  Account Config — Feb 2026
-                </div>
+                <div className="budget-card-title">Account Config — Feb 2026</div>
                 {[
-                  {
-                    account: "BDO Savings",
-                    incomeBase: "₱ 65,000.00",
-                    opening: "₱ 42,500.00",
-                  },
-                  {
-                    account: "GCash",
-                    incomeBase: "₱ 5,000.00",
-                    opening: "₱ 1,200.00",
-                  },
+                  { account: "BDO Savings", incomeBase: "₱ 65,000.00", opening: "₱ 42,500.00" },
+                  { account: "GCash",       incomeBase: "₱ 5,000.00",  opening: "₱ 1,200.00"  },
                 ].map((a, i) => (
                   <div key={a.account}>
-                    {i > 0 && (
-                      <div
-                        style={{
-                          height: 1,
-                          background: "var(--lp-border)",
-                          margin: "8px 0",
-                        }}
-                      />
-                    )}
-                    <div
-                      className="budget-row"
-                      style={{ borderBottom: "1px solid var(--lp-border)" }}
-                    >
-                      <span
-                        className="budget-cat"
-                        style={{ color: "var(--lp-fg)", fontSize: "0.7rem" }}
-                      >
-                        {a.account}
-                      </span>
+                    {i > 0 && <div style={{ height: 1, background: "color-mix(in oklch, white 8%, transparent)", margin: "4px 0" }} />}
+                    <div className="budget-row" style={{ borderBottom: "1px solid color-mix(in oklch, white 8%, transparent)" }}>
+                      <span className="budget-cat" style={{ color: "color-mix(in oklch, white 80%, transparent)", fontSize: "0.72rem", fontWeight: 700 }}>{a.account}</span>
                     </div>
                     <div className="budget-row">
                       <span className="budget-cat">Income Base</span>
-                      <span
-                        style={{
-                          fontFamily: "var(--lp-mono)",
-                          fontSize: "0.82rem",
-                          color: "var(--lp-accent)",
-                        }}
-                      >
-                        {a.incomeBase}
-                      </span>
+                      <span style={{ fontFamily: "var(--lp-mono)", fontSize: "0.82rem", color: "var(--lp-green-logo)" }}>{a.incomeBase}</span>
                     </div>
                     <div className="budget-row">
                       <span className="budget-cat">Opening Balance</span>
-                      <span
-                        style={{
-                          fontFamily: "var(--lp-mono)",
-                          fontSize: "0.82rem",
-                          color: "var(--lp-fg)",
-                        }}
-                      >
-                        {a.opening}
-                      </span>
+                      <span style={{ fontFamily: "var(--lp-mono)", fontSize: "0.82rem", color: "color-mix(in oklch, white 80%, transparent)" }}>{a.opening}</span>
                     </div>
                   </div>
                 ))}
@@ -756,7 +841,10 @@ export default function HomePage() {
         {/* ── HOW IT WORKS ── */}
         <section className="lp-section" id="how">
           <div className="section-header reveal">
-            <div className="section-tag">How it works</div>
+            <div className="section-eyebrow">
+              <span className="section-eyebrow-dot" />
+              How it works
+            </div>
             <h2 className="section-title">
               Four steps.
               <br />
@@ -765,26 +853,10 @@ export default function HomePage() {
           </div>
           <div className="steps reveal">
             {[
-              {
-                num: "01 / Config",
-                title: "Set up accounts",
-                desc: "For each account and month, define its income base and opening balance. Each account gets its own cashflow context, scoped to the month.",
-              },
-              {
-                num: "02 / Budget",
-                title: "Define rules",
-                desc: "Assign fixed or percent-based budgets to categories. Percent budgets resolve against each account's income base automatically.",
-              },
-              {
-                num: "03 / Transact",
-                title: "Log everything",
-                desc: "Record income and expenses as they happen. Fast entry, categorized per transaction. Your data, always fresh.",
-              },
-              {
-                num: "04 / Report",
-                title: "Read the truth",
-                desc: "Cashflow, budget usage, and running balances are all computed live from your transactions. No stale summaries.",
-              },
+              { num: "01", title: "Set up accounts", desc: "For each account and month, define its income base and opening balance. Each account gets its own cashflow context, scoped to the month." },
+              { num: "02", title: "Define rules",    desc: "Assign fixed or percent-based budgets to categories. Percent budgets resolve against each account's income base automatically." },
+              { num: "03", title: "Log everything",  desc: "Record income and expenses as they happen. Fast entry, categorized per transaction. Your data, always fresh." },
+              { num: "04", title: "Read the truth",  desc: "Cashflow, budget usage, and running balances are all computed live from your transactions. No stale summaries." },
             ].map((s) => (
               <div key={s.num} className="step">
                 <div className="step-num">{s.num}</div>
@@ -797,45 +869,49 @@ export default function HomePage() {
 
         {/* ── CTA ── */}
         <section className="cta-section">
-          <div className="cta-glow" />
-          <div className="section-tag reveal" style={{ textAlign: "center" }}>
-            Get Started
-          </div>
-          <h2
-            className="section-title reveal"
-            style={{ maxWidth: "100%", textAlign: "center" }}
-          >
-            Your spreadsheet
-            <br />
-            called. It&apos;s <em>retiring.</em>
-          </h2>
-          <p className="cta-sub reveal">
-            Start tracking your cashflow with precision. Free, fast, and built
-            for real-life money management.
-          </p>
-          <div className="cta-actions reveal">
-            <SignedOut>
-              <SignUpButton mode="modal">
-                <button className="btn-primary">Create Free Account</button>
-              </SignUpButton>
-              <SignInButton mode="modal">
-                <button className="btn-ghost">Sign In →</button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <Link href="/dashboard">
-                <button className="btn-primary">Go to Dashboard</button>
-              </Link>
-            </SignedIn>
+          <div className="cta-card reveal">
+            <div className="cta-eyebrow">Get Started</div>
+            <h2 className="cta-title">
+              Your spreadsheet
+              <br />
+              called. It&apos;s <em>retiring.</em>
+            </h2>
+            <p className="cta-sub">
+              Start tracking your cashflow with precision. Free, fast, and built
+              for real-life money management.
+            </p>
+            <div className="cta-actions">
+              <SignedOut>
+                <SignUpButton mode="modal">
+                  <button className="btn-primary">Create Free Account</button>
+                </SignUpButton>
+                <SignInButton mode="modal">
+                  <button className="btn-ghost" style={{ borderColor: "color-mix(in oklch, white 15%, transparent)", color: "color-mix(in oklch, white 70%, transparent)" }}>
+                    Sign In →
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <Link href="/dashboard">
+                  <button className="btn-primary">Go to Dashboard</button>
+                </Link>
+              </SignedIn>
+            </div>
           </div>
         </section>
 
         {/* ── FOOTER ── */}
         <footer className="lp-footer">
-          <div className="footer-logo">Flowr.</div>
-          <div className="footer-copy">
-            © 2026 · Transactions are truth · Built on Next.js + Django
+          <div className="footer-logo">
+            <div className="footer-logo-mark">F</div>
+            <span className="footer-logo-text">Flowr</span>
           </div>
+          <div className="footer-copy">© 2026 · Transactions are truth · Built on Next.js + Django</div>
+          <ul className="footer-links">
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">GitHub</a></li>
+          </ul>
         </footer>
       </div>
     </>
