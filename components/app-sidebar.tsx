@@ -5,6 +5,7 @@ import {
   IconCamera,
   IconChartBar,
   IconChartPie,
+  IconCreditCard,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -33,6 +34,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { UpgradeButton } from "./UpgeadeButton";
+import { useSubscription } from "@/hooks/useSubscription";
 
 const data = {
   user: {
@@ -66,12 +69,11 @@ const data = {
       url: "/dashboard/reports",
       icon: IconFolder,
     },
-
-    // {
-    //   title: "Accounts",
-    //   url: "/dashboard/accounts",
-    //   icon: IconUsers,
-    // },
+    {
+      title: "Billing",
+      url: "/dashboard/billing",
+      icon: IconCreditCard,
+    },
   ],
   navClouds: [
     {
@@ -158,6 +160,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { plan } = useSubscription()
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -182,6 +186,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
+        <div className="px-2 pb-2">
+          {plan === "free" ? (
+            <UpgradeButton className="w-full" />
+          ) : (
+            <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-primary/10 text-xs text-primary font-medium">
+              ✦ Pro plan
+            </div>
+          )}
+        </div>
         <NavUser />
       </SidebarFooter>
     </Sidebar>

@@ -10,3 +10,20 @@ export const config = {
     "/(api|trpc)(.*)",
   ],
 };
+
+// import { NextResponse } from 'next/server'
+// import type { NextRequest } from 'next/server'
+
+// const PUBLIC_PATHS = ['/sign-in', '/sign-up', '/api/auth']
+
+// export function proxy(req: NextRequest) {
+//   const token = req.cookies.get('access_token')
+//   const isPublic = PUBLIC_PATHS.some(p => req.nextUrl.pathname.startsWith(p))
+
+//   if (!token && !isPublic) {
+//     return NextResponse.redirect(new URL('/sign-in', req.url))
+//   }
+//   return NextResponse.next()
+// }
+
+// export const config = { matcher: ['/((?!_next|favicon.ico).*)'] }

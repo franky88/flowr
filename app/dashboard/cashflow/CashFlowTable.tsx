@@ -19,14 +19,14 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
           variant="ghost"
           size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-transparent"
+          className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-transparent"
         >
           Date
           <ArrowUpDown className="ml-1.5 h-3.5 w-3.5" />
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2 text-sm text-muted-foreground tabular-nums">
+        <div className=" text-sm text-muted-foreground tabular-nums">
           {formatDate(row.original.date)}
         </div>
       ),
@@ -34,7 +34,7 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
     {
       accessorKey: "income",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Income
         </div>
       ),
@@ -43,7 +43,7 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
         const hasValue = value > 0;
         return (
           <div
-            className={`px-3 py-2 text-right font-semibold tabular-nums ${
+            className={` text-right font-semibold tabular-nums ${
               hasValue
                 ? "text-emerald-700 dark:text-emerald-400"
                 : "text-muted-foreground opacity-40"
@@ -57,7 +57,7 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
     {
       accessorKey: "expense",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Expense
         </div>
       ),
@@ -66,7 +66,7 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
         const hasValue = value > 0;
         return (
           <div
-            className={`px-3 py-2 text-right font-semibold tabular-nums ${
+            className={` text-right font-semibold tabular-nums ${
               hasValue
                 ? "text-rose-700 dark:text-rose-400"
                 : "text-muted-foreground opacity-40"
@@ -80,7 +80,7 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
     {
       accessorKey: "net",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Net
         </div>
       ),
@@ -89,7 +89,7 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
         const isPositive = value >= 0;
         return (
           <div
-            className={`px-3 py-2 text-right font-semibold tabular-nums ${
+            className={` text-right font-semibold tabular-nums ${
               isPositive
                 ? "text-emerald-700 dark:text-emerald-400"
                 : "text-rose-700 dark:text-rose-400"
@@ -103,7 +103,7 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
     {
       accessorKey: "balance",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Balance
         </div>
       ),
@@ -111,9 +111,9 @@ const CashFlowTable = ({ cashFlow }: CashFlowTableProps) => {
         const value = Number(row.original.balance);
         const isPositive = value >= 0;
         return (
-          <div className="px-3 py-2 text-right">
+          <div className=" text-right">
             <span
-              className={`inline-block px-2 py-0.5 text-sm font-bold tabular-nums ${
+              className={`inline-block px-2 py-0.5 text-sm font-bold tabular-nums rounded-xl ${
                 isPositive
                   ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400"
                   : "bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400"

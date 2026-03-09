@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/select";
 import { DeleteCategoryButton } from "./DeleteCategoryButton";
 import { EditCategoryPopover } from "@/components/settings/EditCategoryPopover";
+import { AddAccountForm } from "@/components/settings/AddAccountForm";
+import { AddCategoryForm } from "@/components/settings/AddCategoryForm";
+import { UpgradeButton } from "@/components/UpgeadeButton";
 
 function CategoryTree({
   nodes,
@@ -189,6 +192,14 @@ export default async function SettingsPage({
         </p>
       </header>
 
+      <div className="rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium">You're on the Free plan</p>
+          <p className="text-xs text-muted-foreground">Unlock unlimited accounts, categories, and full history.</p>
+        </div>
+        <UpgradeButton />
+      </div>
+
       {/* ── Month Config ─────────────────────────────────────────── */}
       <section className="space-y-4">
         <div className="flex items-end justify-between gap-4 flex-wrap">
@@ -252,7 +263,9 @@ export default async function SettingsPage({
                 </span>
               </label>
 
-              <Button className="w-fit">Save</Button>
+              <Button className="w-fit" >
+                Save
+              </Button>
             </form>
 
             {cfg ? (
@@ -282,16 +295,7 @@ export default async function SettingsPage({
 
         <div>
           <h3 className="font-medium mb-3 text-sm">Add account</h3>
-          <form action={createAccount} className="flex gap-2">
-            <input type="hidden" name="workspaceId" value={workspaceId} />
-            <Input
-              name="name"
-              placeholder="e.g. BPI, Cash"
-              maxLength={120}
-              required
-            />
-            <Button variant="default">Add</Button>
-          </form>
+          <AddAccountForm workspaceId={workspaceId} action={createAccount} />
         </div>
 
         <div>
@@ -317,38 +321,11 @@ export default async function SettingsPage({
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-medium text-sm">Add category</h3>
-          <form
+          <AddCategoryForm 
+            workspaceId={workspaceId}
+            categoryOptions={categoryOptions}
             action={createCategory}
-            className="grid gap-2 sm:grid-cols-[1fr_220px_120px]"
-          >
-            <Input
-              name="name"
-              placeholder="e.g. Bills, Groceries, Internet"
-              maxLength={120}
-              required
-            />
-            <Select name="parent">
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="(No parent)" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value=" ">(No parent)</SelectItem>
-                  {categoryOptions.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Button variant="default">Add</Button>
-          </form>
-          <p className="text-xs text-muted-foreground">
-            Tip: Add the parent first (e.g. Bills), then add its children
-            (Internet, Electricity).
-          </p>
+          />
         </div>
 
         <div>

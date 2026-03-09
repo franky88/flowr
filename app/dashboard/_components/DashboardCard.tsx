@@ -18,10 +18,10 @@ export function Card({
 }) {
   const variantStyles = {
     income:
-      "bg-emerald-50 dark:bg-emerald-950/20 border-t-3 border-emerald-950/60",
-    expense: "bg-rose-50 dark:bg-rose-950/20 border-t-3 border-rose-950/60",
-    net: "bg-blue-50 dark:bg-blue-950/20 border-t-3 border-blue-950/60",
-    balance: "bg-amber-50 dark:bg-amber-950/20 border-t-3 border-amber-950/60",
+      "bg-emerald-50 dark:bg-emerald-950/20",
+    expense: "bg-rose-50 dark:bg-rose-950/20",
+    net: "bg-blue-50 dark:bg-blue-950/20",
+    balance: "bg-amber-50 dark:bg-amber-950/20",
     default: "bg-muted/50",
   };
 

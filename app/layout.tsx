@@ -4,6 +4,8 @@ import { KeyboardShortcutsProvider } from "@/components/KeyboardShortcutsProvide
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { CommandPalette } from "@/components/CommandPalette";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { PlanLimitProvider } from "@/context/PlanLimitContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,16 +35,20 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
-        >
-          <KeyboardShortcutsProvider>
-            {children}
-            <CommandPalette />
-          </KeyboardShortcutsProvider>
-        </body>
-      </html>
+      <PlanLimitProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
+          >
+            <KeyboardShortcutsProvider>
+              {children}
+              <CommandPalette />
+            </KeyboardShortcutsProvider>
+            <UpgradeModal />
+          </body>
+        </html>
+      </PlanLimitProvider>
+      
     </ClerkProvider>
   );
 }

@@ -52,126 +52,143 @@
 
 /* ─────────────────────────────────────────────────────────────
    FLOWR THEME — Light Mode
-   Warm stone/cream palette. Inverted from the dark theme.
-   Primary accent: lime-green (#c8f05a → oklch approx)
+   Source: dashboard-light.html
+   --bg: #f4f6f4  cool green-tinted off-white page
+   --card: #ffffff  pure white cards
+   --text: #1a2e22  deep forest green-black
+   --muted: #7a9485  sage grey
+   --border: #e4ede8  light sage rule
+   --green-primary: #2d7a4f  forest green (primary / income)
+   --green-mid: #3a9e66  mid green (hover, gradients)
+   --green-light: #e8f5ee  pale green tint (chips, icon bgs)
+   --green-chip: #c6ecd5  chip/badge green
+   --logo-green: #5ecf8a  gradient start on logo / active nav
+   --expense: #e05c5c  warm red
+   --warning: #d97c1a  amber
+   --neutral: #4a6fa5  blue (net KPI)
    ───────────────────────────────────────────────────────────── */
 :root {
-  /* Base surfaces — warm off-white / cream */
-  --background: oklch(0.985 0.003 80); /* #f5f3ee  warm page bg */
-  --foreground: oklch(0.147 0.006 60); /* #1a1915  near-black warm */
+  /* ── Page & surfaces ── */
+  --background: oklch(0.965 0.008 145);   /* #f4f6f4  green-tinted off-white */
+  --foreground: oklch(0.188 0.046 152);   /* #1a2e22  deep forest */
 
-  /* Cards & popovers — slightly elevated cream */
-  --card: oklch(0.978 0.004 80); /* #f0ede6  warm card */
-  --card-foreground: oklch(0.147 0.006 60);
+  /* ── Cards & popovers ── */
+  --card:            oklch(1 0 0);        /* #ffffff */
+  --card-foreground: oklch(0.188 0.046 152);
 
-  --popover: oklch(0.978 0.004 80);
-  --popover-foreground: oklch(0.147 0.006 60);
+  --popover:            oklch(1 0 0);
+  --popover-foreground: oklch(0.188 0.046 152);
 
-  /* Primary — lime-green accent (#c8f05a) */
-  --primary: oklch(0.888 0.213 127.5); /* lime-green */
-  --primary-foreground: oklch(0.12 0.012 80); /* dark text on lime */
+  /* ── Primary — forest green #2d7a4f ── */
+  --primary:            oklch(0.488 0.118 152);
+  --primary-foreground: oklch(1 0 0);     /* white text on green */
 
-  /* Secondary — warm stone */
-  --secondary: oklch(0.923 0.006 70); /* #e8e4db  light stone */
-  --secondary-foreground: oklch(0.21 0.008 65);
+  /* ── Secondary — pale green tint #e8f5ee ── */
+  --secondary:            oklch(0.958 0.038 152);
+  --secondary-foreground: oklch(0.252 0.062 152); /* dark forest on pale */
 
-  /* Muted — desaturated warm stone */
-  --muted: oklch(0.935 0.005 75); /* #ece9e1 */
-  --muted-foreground: oklch(0.498 0.012 60); /* #8a8578  mid-tone warm grey */
+  /* ── Muted — sage grey #7a9485 ── */
+  --muted:            oklch(0.928 0.018 155); /* #e4ede8  light sage surface */
+  --muted-foreground: oklch(0.592 0.038 162); /* #7a9485  sage text */
 
-  /* Accent — lime-green tint for hover states */
-  --accent: oklch(0.96 0.065 127.5); /* very light lime tint */
-  --accent-foreground: oklch(0.22 0.018 110); /* dark olive text */
+  /* ── Accent — mid green hover tint ── */
+  --accent:            oklch(0.958 0.038 152); /* #e8f5ee  pale green */
+  --accent-foreground: oklch(0.488 0.118 152); /* #2d7a4f  forest */
 
-  /* Destructive — warm red (#f05a5a) */
-  --destructive: oklch(0.638 0.195 25.5); /* #f05a5a  warm red */
+  /* ── Destructive — warm red #e05c5c ── */
+  --destructive: oklch(0.638 0.168 22);
 
-  /* Borders & inputs — warm stone rule */
-  --border: oklch(0.882 0.008 68); /* #dbd7ce */
-  --input: oklch(0.882 0.008 68);
-  --ring: oklch(0.888 0.213 127.5); /* lime ring on focus */
+  /* ── Borders & inputs ── */
+  --border: oklch(0.928 0.018 155); /* #e4ede8 */
+  --input:  oklch(0.928 0.018 155);
+  --ring:   oklch(0.488 0.118 152); /* forest green focus ring */
 
-  /* Border radius — tight like the help theme (4px base) */
-  --radius: 0.25rem;
+  /* ── Border radius — rounded like the dashboard cards (16px) ── */
+  --radius: 1rem; /* 16px */
 
-  /* Charts — blue scale from the help theme (#5a9ef0 range) */
-  --chart-1: oklch(0.809 0.105 251.813); /* light blue */
-  --chart-2: oklch(0.888 0.213 127.5); /* lime-green */
-  --chart-3: oklch(0.638 0.195 25.5); /* warm red */
-  --chart-4: oklch(0.623 0.168 259.815); /* mid blue */
-  --chart-5: oklch(0.498 0.012 60); /* warm grey */
+  /* ── Charts ──
+     chart-1: income green  #2d7a4f
+     chart-2: logo green    #5ecf8a
+     chart-3: expense red   #e05c5c
+     chart-4: warning amber #d97c1a
+     chart-5: neutral blue  #4a6fa5
+  ── */
+  --chart-1: oklch(0.488 0.118 152); /* forest green — income  */
+  --chart-2: oklch(0.742 0.152 152); /* logo green   — positive */
+  --chart-3: oklch(0.638 0.168 22);  /* warm red     — expense  */
+  --chart-4: oklch(0.652 0.148 52);  /* amber        — warning  */
+  --chart-5: oklch(0.498 0.102 252); /* blue         — neutral  */
 
-  /* Sidebar — warm off-white, slightly distinct from page */
-  --sidebar: oklch(0.96 0.005 78); /* #edeae3 */
-  --sidebar-foreground: oklch(0.147 0.006 60);
-  --sidebar-primary: oklch(0.888 0.213 127.5);
-  --sidebar-primary-foreground: oklch(0.12 0.012 80);
-  --sidebar-accent: oklch(0.96 0.065 127.5);
-  --sidebar-accent-foreground: oklch(0.22 0.018 110);
-  --sidebar-border: oklch(0.882 0.008 68);
-  --sidebar-ring: oklch(0.888 0.213 127.5);
+  /* ── Sidebar — dark forest #1a3a2a ── */
+  --sidebar:                    oklch(0.252 0.062 152); /* #1a3a2a */
+  --sidebar-foreground:         oklch(1 0 0 / 85%);     /* white text */
+  --sidebar-primary:            oklch(0.742 0.152 152); /* #5ecf8a  active item */
+  --sidebar-primary-foreground: oklch(0.188 0.046 152); /* dark on active */
+  --sidebar-accent:             oklch(0.742 0.152 152 / 20%); /* rgba(94,207,138,0.2) active bg */
+  --sidebar-accent-foreground:  oklch(0.742 0.152 152); /* #9eecc0  active text */
+  --sidebar-border:             oklch(1 0 0 / 8%);       /* rgba(255,255,255,0.08) */
+  --sidebar-ring:               oklch(0.742 0.152 152);
 }
 
 /* ─────────────────────────────────────────────────────────────
    FLOWR THEME — Dark Mode
-   Directly from the help .html CSS variables, converted to oklch.
-   --bg: #0c0c0a  --surface: #141410  --surface2: #1c1c17
-   --fg: #f0ede6  --fg-muted: #8a8578  --fg-dim: #5a5750
-   --accent: #c8f05a  --red: #f05a5a  --blue: #5a9ef0
+   Source: dashboard-light.html colors inverted/darkened.
+   --bg deep: #0c0c0a  --surface: #141410  --surface2: #1c1c17
+   Accent stays forest green family; surfaces go near-black olive.
    ───────────────────────────────────────────────────────────── */
 .dark {
-  /* Base surfaces — deep olive-black */
-  --background: oklch(0.138 0.006 60); /* #0c0c0a */
-  --foreground: oklch(0.93 0.006 75); /* #f0ede6  warm off-white */
+  /* ── Page & surfaces ── */
+  --background: oklch(0.138 0.006 60);   /* #0c0c0a  near-black olive */
+  --foreground: oklch(0.93 0.006 75);    /* #f0ede6  warm off-white */
 
-  /* Cards — first surface step up */
-  --card: oklch(0.175 0.007 62); /* #141410 */
+  /* ── Cards — first surface step up ── */
+  --card:            oklch(0.175 0.007 62); /* #141410 */
   --card-foreground: oklch(0.93 0.006 75);
 
-  /* Popovers — second surface step */
-  --popover: oklch(0.21 0.008 62); /* #1c1c17 */
+  /* ── Popovers — second surface step ── */
+  --popover:            oklch(0.21 0.008 62); /* #1c1c17 */
   --popover-foreground: oklch(0.93 0.006 75);
 
-  /* Primary — lime-green (#c8f05a) */
-  --primary: oklch(0.888 0.213 127.5);
-  --primary-foreground: oklch(0.12 0.012 80); /* dark text on lime */
+  /* ── Primary — brightened forest green for dark ── */
+  --primary:            oklch(0.742 0.152 152); /* #5ecf8a  logo green, readable on dark */
+  --primary-foreground: oklch(0.138 0.006 60);  /* dark bg on bright green */
 
-  /* Secondary — slightly elevated dark surface */
-  --secondary: oklch(0.21 0.008 62); /* #1c1c17 */
+  /* ── Secondary — elevated dark surface ── */
+  --secondary:            oklch(0.21 0.008 62);
   --secondary-foreground: oklch(0.93 0.006 75);
 
-  /* Muted — subtle dark warm surface */
-  --muted: oklch(0.192 0.007 55); /* between surface and surface2 */
-  --muted-foreground: oklch(0.53 0.01 62); /* #8a8578 */
+  /* ── Muted ── */
+  --muted:            oklch(0.192 0.007 55);  /* subtle dark surface */
+  --muted-foreground: oklch(0.53 0.01 62);    /* #8a8578  mid-tone */
 
-  /* Accent — lime-green (used for hover backgrounds, chips) */
-  --accent: oklch(0.21 0.008 62); /* surface2 as accent bg */
+  /* ── Accent — surface2 as hover bg ── */
+  --accent:            oklch(0.21 0.008 62);
   --accent-foreground: oklch(0.93 0.006 75);
 
-  /* Destructive — warm red (#f05a5a) */
-  --destructive: oklch(0.68 0.185 25.5); /* #f05a5a */
+  /* ── Destructive — slightly lightened red ── */
+  --destructive: oklch(0.68 0.185 22);        /* #f05a5a */
 
-  /* Borders — very subtle warm white overlay */
-  --border: oklch(1 0 0 / 7%); /* rgba(255,255,255,0.07) */
-  --input: oklch(1 0 0 / 12%); /* rgba(255,255,255,0.12) */
-  --ring: oklch(0.888 0.213 127.5); /* lime ring */
+  /* ── Borders ── */
+  --border: oklch(1 0 0 / 7%);   /* rgba(255,255,255,0.07) */
+  --input:  oklch(1 0 0 / 12%);
+  --ring:   oklch(0.742 0.152 152); /* #5ecf8a */
 
-  /* Charts — same as help theme color palette */
-  --chart-1: oklch(0.809 0.105 251.813); /* light blue  #5a9ef0-ish */
-  --chart-2: oklch(0.888 0.213 127.5); /* lime-green  #c8f05a */
-  --chart-3: oklch(0.68 0.185 25.5); /* warm red    #f05a5a */
-  --chart-4: oklch(0.623 0.168 259.815); /* mid blue */
-  --chart-5: oklch(0.424 0.015 62); /* dim warm    #5a5750 */
+  /* ── Charts — same hues, slightly lighter for dark bg ── */
+  --chart-1: oklch(0.742 0.152 152); /* #5ecf8a  income green */
+  --chart-2: oklch(0.582 0.138 152); /* #3a9e66  mid green    */
+  --chart-3: oklch(0.68 0.185 22);   /* #f05a5a  expense red  */
+  --chart-4: oklch(0.72 0.148 52);   /* amber    — lighter    */
+  --chart-5: oklch(0.62 0.102 252);  /* blue     — lighter    */
 
-  /* Sidebar — same as card surface */
-  --sidebar: oklch(0.175 0.007 62); /* #141410 */
-  --sidebar-foreground: oklch(0.93 0.006 75);
-  --sidebar-primary: oklch(0.888 0.213 127.5);
-  --sidebar-primary-foreground: oklch(0.12 0.012 80);
-  --sidebar-accent: oklch(0.21 0.008 62);
-  --sidebar-accent-foreground: oklch(0.93 0.006 75);
-  --sidebar-border: oklch(1 0 0 / 7%);
-  --sidebar-ring: oklch(0.53 0.01 62);
+  /* ── Sidebar — same dark forest, but elevated ── */
+  --sidebar:                    oklch(0.175 0.007 62);   /* card surface */
+  --sidebar-foreground:         oklch(0.93 0.006 75);
+  --sidebar-primary:            oklch(0.742 0.152 152);  /* #5ecf8a */
+  --sidebar-primary-foreground: oklch(0.138 0.006 60);
+  --sidebar-accent:             oklch(0.742 0.152 152 / 20%);
+  --sidebar-accent-foreground:  oklch(0.742 0.152 152);
+  --sidebar-border:             oklch(1 0 0 / 7%);
+  --sidebar-ring:               oklch(0.53 0.01 62);
 }
 
 @layer base {
@@ -182,13 +199,13 @@
     @apply bg-background text-foreground font-sans;
   }
   input[type="month"]::-webkit-calendar-picker-indicator {
-    filter: brightness(0) saturate(100%) invert(29%) sepia(89%) saturate(1200%)
-      hue-rotate(235deg) brightness(90%);
+    filter: brightness(0) saturate(100%) invert(29%) sepia(60%) saturate(600%)
+      hue-rotate(110deg) brightness(85%);
     cursor: pointer;
   }
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: brightness(0) saturate(100%) invert(29%) sepia(89%) saturate(1200%)
-      hue-rotate(235deg) brightness(90%);
+    filter: brightness(0) saturate(100%) invert(29%) sepia(60%) saturate(600%)
+      hue-rotate(110deg) brightness(85%);
     cursor: pointer;
   }
 

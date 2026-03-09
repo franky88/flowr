@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { ApiError, ApiErrorBody } from "@/lib/errors";
+// import { getAccessToken } from "./auth";
 
 type ApiFetchInit = RequestInit & {
   rawErrorBody?: boolean;
@@ -9,6 +10,7 @@ export async function apiFetch<T = any>(
   path: string,
   init?: ApiFetchInit,
 ): Promise<T> {
+  // Get Clerk token and user ID on every request to ensure we have the latest auth state.
   const { userId, getToken } = await auth();
   if (!userId) {
     throw new ApiError(401, { error: "unauthorized", message: "Not signed in." });
@@ -18,6 +20,9 @@ export async function apiFetch<T = any>(
   if (!token) {
     throw new ApiError(401, { error: "unauthorized", message: "No Clerk token (check JWT template name)." });
   }
+
+  // const token = await getAccessToken()
+  // if (!token) throw new Error('Not signed in')
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
     ...init,

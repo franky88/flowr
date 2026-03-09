@@ -59,12 +59,12 @@ const TransactionTable = ({
     {
       accessorKey: "date",
       header: () => (
-        <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Date
         </div>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2 text-sm text-muted-foreground tabular-nums">
+        <div className=" text-sm text-muted-foreground tabular-nums">
           {formatDate(row.original.date)}
         </div>
       ),
@@ -72,21 +72,21 @@ const TransactionTable = ({
     {
       accessorKey: "type",
       header: () => (
-        <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Type
         </div>
       ),
       cell: ({ row }) => {
         const isIncome = row.original.type === "INCOME";
         return (
-          <div className="px-3 py-2">
+          <div className="">
             {isIncome ? (
-              <span className="inline-flex items-center gap-1.5 bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1.5 bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 rounded-xl">
                 <ArrowDownLeft className="h-3.5 w-3.5" />
                 INCOME
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:text-rose-400">
+              <span className="inline-flex items-center gap-1.5 bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 rounded-xl">
                 <ArrowUpRight className="h-3.5 w-3.5" />
                 EXPENSE
               </span>
@@ -102,7 +102,7 @@ const TransactionTable = ({
           variant="ghost"
           size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-transparent"
+          className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-transparent"
         >
           Account
           <ArrowUpDown className="ml-1.5 h-3.5 w-3.5" />
@@ -115,7 +115,7 @@ const TransactionTable = ({
         return account?.id === filterValue;
       },
       cell: ({ row }) => (
-        <div className="px-3 py-2">
+        <div className="">
           <span className="bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
             {accountById.get(row.original.account) ?? "—"}
             {/* {row.original.account ?? "—"} */}
@@ -130,7 +130,7 @@ const TransactionTable = ({
           variant="ghost"
           size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-transparent"
+          className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-transparent"
         >
           Category
           <ArrowUpDown className="ml-1.5 h-3.5 w-3.5" />
@@ -140,7 +140,7 @@ const TransactionTable = ({
       cell: ({ getValue }) => {
         const value = getValue<string>();
         return (
-          <div className="px-3 py-2">
+          <div className="">
             {value ? (
               <span className="bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                 {value}
@@ -155,14 +155,14 @@ const TransactionTable = ({
     {
       accessorKey: "amount",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Amount
         </div>
       ),
       cell: ({ row }) => {
         return (
           <div
-            className={`px-3 py-2 text-right font-semibold tabular-nums ${
+            className={` text-right font-semibold tabular-nums ${
               row.original.type === "INCOME"
                 ? "text-emerald-700 dark:text-emerald-400"
                 : "text-rose-700 dark:text-rose-400"
@@ -177,12 +177,12 @@ const TransactionTable = ({
     {
       accessorKey: "note",
       header: () => (
-        <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Note
         </div>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2 max-w-50 truncate text-sm text-muted-foreground">
+        <div className=" max-w-50 truncate text-sm text-muted-foreground">
           {row.original.note || <span className="italic opacity-40">—</span>}
         </div>
       ),
@@ -190,12 +190,12 @@ const TransactionTable = ({
     {
       accessorKey: "created_by",
       header: () => (
-        <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Created by
         </div>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2 text-sm text-muted-foreground">
+        <div className=" text-sm text-muted-foreground">
           {row.original.created_by ? (
             <div className="flex items-center gap-2">
               <Avatar size="sm">
@@ -220,7 +220,7 @@ const TransactionTable = ({
           row.original.created_by === userId ||
           row.original.created_by === null;
         return (
-          <div className="px-3 py-2">
+          <div className="">
             <TxActions
               workspaceId={workspaceId}
               month={month}

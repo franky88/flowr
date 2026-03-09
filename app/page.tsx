@@ -395,6 +395,9 @@ export default function HomePage() {
               <a href="#preview">Preview</a>
             </li>
             <li>
+              <a href="/pricing">Pricing</a>
+            </li>
+            <li>
               <a href="#how">How it works</a>
             </li>
           </ul>

@@ -185,12 +185,12 @@ export default function BudgetsTable({
     {
       accessorKey: "category",
       header: () => (
-        <div className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Category
         </div>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2 font-medium">
+        <div className=" font-medium">
           {row.original.category_name}
         </div>
       ),
@@ -198,12 +198,12 @@ export default function BudgetsTable({
     {
       accessorKey: "rule_type",
       header: () => (
-        <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Rule
         </div>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2">
+        <div className="">
           <span className="bg-muted px-2 py-0.5 text-xs font-semibold tracking-wide text-muted-foreground">
             {row.original.rule_type.toUpperCase()}
           </span>
@@ -218,8 +218,8 @@ export default function BudgetsTable({
         </div>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2">
-          <span className="px-3 py-2 text-xs font-semibold tracking-wide text-muted-foreground">
+        <div className="">
+          <span className=" text-xs font-semibold tracking-wide text-muted-foreground">
             {row.original.rule_type === "percent"
               ? `${row.original.value}%`
               : `₱${Number(row.original.value).toLocaleString()}`}
@@ -230,12 +230,12 @@ export default function BudgetsTable({
     {
       accessorKey: "resolved_amount",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Budget
         </div>
       ),
       cell: ({ row }) => (
-        <div className="px-3 py-2 text-right font-medium text-blue-700 dark:text-blue-400">
+        <div className=" text-right font-medium text-blue-700 dark:text-blue-400">
           ₱{Number(row.original.resolved_amount).toLocaleString()}
         </div>
       ),
@@ -243,7 +243,7 @@ export default function BudgetsTable({
     {
       id: "spent",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Spent
         </div>
       ),
@@ -251,7 +251,7 @@ export default function BudgetsTable({
         const m = monitorByCategoryId.get(row.original.category);
         const spent = m?.spent ?? "0.00";
         return (
-          <div className="px-3 py-2 text-right font-medium text-rose-700 dark:text-rose-400">
+          <div className=" text-right font-medium text-rose-700 dark:text-rose-400">
             ₱{Number(spent).toLocaleString()}
           </div>
         );
@@ -260,7 +260,7 @@ export default function BudgetsTable({
     {
       id: "remaining",
       header: () => (
-        <div className="px-3 py-2 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Remaining
         </div>
       ),
@@ -272,7 +272,7 @@ export default function BudgetsTable({
 
         return (
           <div
-            className={`px-3 py-2 text-right font-medium ${
+            className={` text-right font-medium ${
               exceeded
                 ? "text-rose-600 dark:text-rose-400"
                 : "text-emerald-700 dark:text-emerald-400"
@@ -286,7 +286,7 @@ export default function BudgetsTable({
     {
       id: "status",
       header: () => (
-        <div className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className=" text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Status
         </div>
       ),
@@ -295,7 +295,7 @@ export default function BudgetsTable({
         const exceeded = m?.isExceeded ?? false;
 
         return (
-          <div className="px-3 py-2">
+          <div className="">
             {exceeded ? (
               <span className="inline-flex items-center gap-1.5 bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 rounded-xl">
                 <FileWarningIcon className="h-3.5 w-3.5" />
@@ -314,7 +314,7 @@ export default function BudgetsTable({
     {
       id: "actions",
       cell: ({ row }) => (
-        <div className="px-3 py-2 text-right">
+        <div className=" text-right">
           <EditBudgetPopover
             budget={row.original}
             workspaceId={workspaceId}

@@ -26,6 +26,7 @@ import {
 import { toast } from "sonner";
 import { SignOutItem } from "./SignOutItem";
 import { useRouter } from "next/navigation";
+import { PlanBadge } from "./PlanBadge";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -96,6 +97,7 @@ export function NavUser() {
                   <span className="text-muted-foreground truncate text-xs">
                     {email}
                   </span>
+                  <PlanBadge className="mt-0.5" />
                 </div>
               </div>
             </DropdownMenuLabel>

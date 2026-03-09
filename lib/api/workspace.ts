@@ -5,8 +5,14 @@ export async function getWorkspaceId(): Promise<string> {
     "/v1/whoami/",
   );
   const first = whoami.workspaces[0];
-  if (!first) throw new Error("No workspace found.");
-  return first.id;
+  if (first) return first.id;
+
+  const created = await apiFetch<{ id: string }>("/v1/workspaces/", {
+    method: "POST",
+    body: JSON.stringify({ name: "My Workspace" }),
+  });
+
+  return created.id;
 }
 
 export async function inviteMember(
