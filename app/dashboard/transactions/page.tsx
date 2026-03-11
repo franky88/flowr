@@ -1,14 +1,12 @@
-import { defaultMonthYYYYMM } from "@/lib/month";
-import { MonthPicker } from "@/components/MonthPicker";
+import { defaultMonthYYYYMM, formatShortMonth } from "@/lib/month";
 import { flattenCategoryTree } from "@/lib/categories";
 import TransactionTable from "./TransactionTable";
-import AddTransaction from "./AddTransaction";
 import { Badge } from "@/components/ui/badge";
 import { getWorkspaceId, getWorkspaceMembers } from "@/lib/api/workspace";
 import { listAccounts } from "@/lib/api/accounts";
 import { listTransactions } from "@/lib/api/transactions";
 import { listCategories } from "@/lib/api/category";
-import { ExportButton } from "@/components/ExportButton";
+import { TransactionsHeader } from "./TransactionsHeader";
 
 export default async function TransactionsPage({
   searchParams,
@@ -45,7 +43,7 @@ export default async function TransactionsPage({
 
   const txsForExport = txs.map((t) => ({
     ...t,
-    account:  accountById.get(t.account)  ?? t.account,
+    account: accountById.get(t.account) ?? t.account,
     category: categoryById.get(t.category) ?? t.category,
   }));
 
@@ -62,37 +60,20 @@ export default async function TransactionsPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <MonthPicker defaultMonth={defaultMonth} />
-          <AddTransaction
-            month={month}
-            workspaceId={workspaceId}
-            accounts={accounts}
-            categoriesForSelect={categoriesForSelect}
-            title="Transaction"
-          />
-          <ExportButton
-            filename={`transactions-${month}`}
-            title="Transactions"
-            month={month}
-            columns={[
-              { header: "Date",     key: "date",     width: 14 },
-              { header: "Type",     key: "type",     width: 10 },
-              { header: "Note",     key: "note",     width: 30 },
-              { header: "Amount",   key: "amount",   width: 14 },
-              { header: "Account",  key: "account",  width: 18 },
-              { header: "Category", key: "category", width: 20 },
-            ]}
-            data={txsForExport}
-          />
-        </div>
+        <TransactionsHeader
+          month={month}
+          defaultMonth={defaultMonth}
+          workspaceId={workspaceId}
+          accounts={accounts}
+          categoriesForSelect={categoriesForSelect}
+        />
       </div>
 
       {/* List Transactions */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-medium text-sm sm:text-base">
-            Transactions for {month}
+            Transactions for {formatShortMonth(month)}
           </h2>
           <Badge variant="outline" className="text-sm text-muted-foreground">
             {txs.length} items

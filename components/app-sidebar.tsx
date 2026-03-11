@@ -7,21 +7,15 @@ import {
   IconChartPie,
   IconCreditCard,
   IconDashboard,
-  IconDatabase,
   IconFileAi,
   IconFileDescription,
-  IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
-  IconReport,
-  IconSearch,
   IconSettings,
-  IconUsers,
+  IconSettings2,
 } from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -73,6 +67,29 @@ const data = {
       title: "Billing",
       url: "/dashboard/billing",
       icon: IconCreditCard,
+    },
+    {
+      title: "Settings",
+      url: "#",
+      icon: IconSettings2,
+      items: [
+        {
+          title: "Accounts",
+          url: "#",
+        },
+        {
+          title: "Categories",
+          url: "#",
+        },
+        {
+          title: "Monthly Configuration",
+          url: "#",
+        },
+        {
+          title: "Workspaces",
+          url: "#",
+        },
+      ],
     },
   ],
   navClouds: [
@@ -160,7 +177,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { plan } = useSubscription()
+  const { plan } = useSubscription();
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -169,12 +186,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
+              size="lg"
+              className="hover:bg-transparent active:bg-transparent overflow-visible"
             >
-              <a href="/dashboard" className="flex items-center gap-2">
-                <em className="text-4xl font-bold text-primary light:text-secondary font-display italic tracking-tight">
-                  Flowr.
-                </em>
+              <a
+                href="/dashboard"
+                className="flex items-center overflow-visible"
+              >
+                <span
+                  className="font-display italic font-bold overflow-visible"
+                  style={{
+                    fontSize: "1.75rem",
+                    background: "linear-gradient(90deg, #2d7a4f, #5ecf8a)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    lineHeight: 1.2,
+                    paddingRight: "0.2em", // room for italic overhang
+                  }}
+                >
+                  Flowr
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

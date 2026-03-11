@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { PieChart, Pie, Cell, Sector } from "recharts";
 import { ChartContainer, ChartConfig } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
 
 export type BudgetChartRow = {
   categoryId: string;
@@ -169,7 +170,7 @@ export function BudgetPieChart({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-1 gap-6 items-start",
+        "grid grid-cols-1 md:grid-cols-1 xl:grid-cols-[1fr_420px] gap-6 items-start",
         className,
       )}
     >
@@ -259,93 +260,6 @@ export function BudgetPieChart({
             </>
           )}
         </div>
-      </div>
-
-      {/* ── Legend with progress bars ──────────────────────────────────── */}
-      <div className="space-y-3 w-full">
-        {rows.map((r, i) => {
-          const spent = parseFloat(r.spent);
-          const budget = parseFloat(r.budgetResolved);
-          const color = colorByCategoryId[r.categoryId];
-          const percentage = pct(spent, budget);
-          const isActive =
-            activeIndex ===
-            chartData.findIndex((d) => d.categoryId === r.categoryId);
-
-          return (
-            <div
-              key={r.categoryId}
-              className={cn(
-                "rounded-lg px-3 py-2.5 transition-colors",
-                isActive ? "bg-muted/60" : "hover:bg-muted/40",
-              )}
-              onMouseEnter={() => {
-                const idx = chartData.findIndex(
-                  (d) => d.categoryId === r.categoryId,
-                );
-                if (idx !== -1) setActiveIndex(idx);
-              }}
-              onMouseLeave={() => setActiveIndex(null)}
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span
-                    className="shrink-0 h-2.5 w-2.5 rounded-full"
-                    style={{
-                      background:
-                        color ?? (r.isExceeded ? EXCEEDED_COLOR : "#94a3b8"),
-                    }}
-                  />
-                  <span className="text-sm font-medium truncate">
-                    {r.categoryName}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 shrink-0 ml-2 text-xs tabular-nums">
-                  <span
-                    className={cn(
-                      r.isExceeded
-                        ? "text-destructive font-semibold"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    {formatMoney(parseFloat(r.spent))}
-                  </span>
-                  <span className="text-muted-foreground/50">/</span>
-                  <span className="text-muted-foreground">
-                    {formatMoney(budget)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Progress bar */}
-              <div className="relative h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                <div
-                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
-                  style={{
-                    width: `${percentage}%`,
-                    background: r.isExceeded ? EXCEEDED_COLOR : color,
-                  }}
-                />
-              </div>
-
-              {/* Percentage + remaining label */}
-              <div className="flex justify-between mt-1">
-                <span className="text-[10px] text-muted-foreground tabular-nums">
-                  {percentage.toFixed(0)}%
-                </span>
-                {r.isExceeded ? (
-                  <span className="text-[10px] font-medium text-destructive">
-                    {formatMoney(Math.abs(parseFloat(r.remaining)))} over
-                  </span>
-                ) : (
-                  <span className="text-[10px] text-muted-foreground">
-                    {formatMoney(parseFloat(r.remaining))} left
-                  </span>
-                )}
-              </div>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

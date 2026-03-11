@@ -7,6 +7,8 @@ import { formatMoney } from "@/lib/formatMoney";
 import { getWorkspaceId } from "@/lib/api/workspace";
 import { listCategories } from "@/lib/api/category";
 import { BudgetsTabs } from "@/components/budgets/BudgetTabs";
+import { apiFetch } from "@/lib/api";
+import { listAccounts } from "@/lib/api/accounts";
 
 export default async function BudgetsPage({
   searchParams,
@@ -31,6 +33,28 @@ export default async function BudgetsPage({
   const budgetTotal = parseFloat(monitor.totals.budgetResolved);
   const usedPct =
     budgetTotal > 0 ? Math.min((spent / budgetTotal) * 100, 100) : 0;
+
+  // Add this helper at the top of the file (outside the component):
+  async function getAccountMonthConfig(
+    workspaceId: string,
+    month: string,
+    accountId: string,
+  ) {
+    const qs = new URLSearchParams({ month, accountId });
+    return apiFetch<AccountMonthConfig | null>(
+      `/v1/workspaces/${workspaceId}/config/?${qs.toString()}`,
+      { method: "GET", rawErrorBody: true },
+    ).catch(() => null);
+  }
+
+  // Then inside the page function, add to the existing Promise.all or after it:
+  const accounts = await listAccounts(workspaceId);
+  const firstAccountId = accounts[0]?.id ?? "";
+  const cfg = firstAccountId
+    ? await getAccountMonthConfig(workspaceId, month, firstAccountId)
+    : null;
+  const incomeBase = Number(cfg?.income_base ?? 0);
+  const existingCategoryIds = budgets.map((b) => b.category);
 
   return (
     <div className="min-h-screen">
@@ -137,6 +161,9 @@ export default async function BudgetsPage({
                 monitor={monitor}
                 mode={mode}
                 workspaceId={workspaceId}
+                incomeBase={incomeBase}
+                accountId={accountId}
+                existingCategoryIds={existingCategoryIds}
               />
             </div>
           </div>

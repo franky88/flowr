@@ -21,6 +21,9 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { useArithmeticInput } from "@/hooks/useArithmeticInput";
+import { useCategorySuggestion } from "@/hooks/useCategorySuggestion";
+import { Sparkles, X } from "lucide-react";
+import { useMemo } from "react";
 
 const schema = z.object({
   date: z.string().min(1, "Date is required"),
@@ -72,6 +75,8 @@ export default function TransactionForm({
     control,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<TransactionFormValues>({
     resolver: zodResolver(schema),
@@ -84,6 +89,36 @@ export default function TransactionForm({
       note: defaultValues?.note ?? "",
     },
   });
+
+  const noteValue = watch("note") ?? "";
+  const typeValue = watch("type") ?? "expense";
+  const categoryValue = watch("category") ?? "";
+
+  const {
+    suggestedId,
+    loading: suggestLoading,
+    dismiss,
+  } = useCategorySuggestion(
+    noteValue,
+    typeValue,
+    categoriesForSelect,
+    categoryValue,
+  );
+
+  const suggestedCategory = useMemo(() => {
+    if (!suggestedId) return null;
+    const stack: string[] = [];
+    for (const cat of categoriesForSelect) {
+      stack.splice(cat.level);
+      stack.push(cat.name);
+      if (cat.id === suggestedId) {
+        return { id: cat.id, name: stack.join(" > ") };
+      }
+    }
+    return null;
+  }, [suggestedId, categoriesForSelect]);
+
+  console.log("Categories for select:", categoriesForSelect);
 
   return (
     <form
@@ -177,7 +212,7 @@ export default function TransactionForm({
           </FieldContent>
         </Field>
 
-        <Field>
+        {/* <Field>
           <FieldLabel>Category</FieldLabel>
           <FieldContent>
             <Controller
@@ -185,6 +220,78 @@ export default function TransactionForm({
               name="category"
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categoriesForSelect.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {"— ".repeat(c.level)}
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FieldError errors={[errors.category]} />
+          </FieldContent>
+        </Field> */}
+        <Field>
+          <FieldLabel>Category</FieldLabel>
+          <FieldContent>
+            {/* Suggestion chip */}
+            {suggestedCategory && (
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+                style={{
+                  backgroundColor:
+                    "color-mix(in oklch, var(--primary) 10%, transparent)",
+                  border:
+                    "1px solid color-mix(in oklch, var(--primary) 20%, transparent)",
+                }}
+              >
+                <Sparkles className="w-3 h-3 text-primary shrink-0" />
+                <span className="text-foreground">
+                  Suggested:{" "}
+                  <button
+                    type="button"
+                    className="font-semibold text-primary hover:underline"
+                    onClick={() => {
+                      setValue("category", suggestedCategory.id);
+                      dismiss();
+                    }}
+                  >
+                    {suggestedCategory.name}
+                  </button>
+                </span>
+                <button
+                  type="button"
+                  onClick={dismiss}
+                  className="ml-auto text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+            {suggestLoading && (
+              <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3 animate-pulse text-primary" />
+                Suggesting category…
+              </p>
+            )}
+
+            <Controller
+              control={control}
+              name="category"
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={(v) => {
+                    field.onChange(v);
+                    dismiss();
+                  }}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>

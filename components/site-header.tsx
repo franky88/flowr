@@ -1,14 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import {
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
 import { ThemeToggle } from "./theme/ThemeToggle";
-import { Button } from "./ui/button";
 
 export function SiteHeader() {
   return (
@@ -18,18 +10,7 @@ export function SiteHeader() {
         <Separator orientation="vertical" className="mx-2" />
         <h1 className="text-base font-medium">Transactions are truth</h1>
         <div className="ml-auto flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-          </div>
-          <SignedOut>
-            <SignInButton />
-            <SignUpButton>
-              <Button>Sign Up</Button>
-            </SignUpButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <ThemeToggle />
         </div>
       </div>
     </header>

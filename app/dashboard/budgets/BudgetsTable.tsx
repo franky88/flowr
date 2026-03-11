@@ -32,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import DeleteItem from "@/components/DeleteItem";
 import { CopyBudgetsButton } from "@/components/budgets/CopyBudgetsButton";
 import { toast } from "sonner";
+import { AISuggestBudgets } from "./AISuggestBudgets";
 
 function EditBudgetPopover({
   budget,
@@ -154,6 +155,9 @@ export default function BudgetsTable({
   budgets,
   mode,
   workspaceId,
+  incomeBase,
+  accountId,
+  existingCategoryIds,
 }: {
   month: string;
   categories: CategoryNode[];
@@ -161,6 +165,9 @@ export default function BudgetsTable({
   budgets: Budget[];
   mode: "leaf" | "rollup";
   workspaceId: string;
+  incomeBase: number;
+  accountId?: string;
+  existingCategoryIds: string[];
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -190,9 +197,7 @@ export default function BudgetsTable({
         </div>
       ),
       cell: ({ row }) => (
-        <div className=" font-medium">
-          {row.original.category_name}
-        </div>
+        <div className=" font-medium">{row.original.category_name}</div>
       ),
     },
     {
@@ -410,6 +415,13 @@ export default function BudgetsTable({
 
         <div className="flex items-center gap-3">
           <CopyBudgetsButton workspaceId={workspaceId} month={month} />
+          <AISuggestBudgets
+            workspaceId={workspaceId}
+            month={month}
+            incomeBase={incomeBase}
+            accountId={accountId}
+            existingCategoryIds={existingCategoryIds}
+          />
           <AddBudgetDialog
             flatCats={flatCats}
             isPending={isPending}

@@ -38,3 +38,18 @@ export async function copyBudgetsToNextMonth(
     body: JSON.stringify({ month }),
   });
 }
+
+export async function bulkCreateBudgetsAction(
+  workspaceId: string,
+  budgets: BudgetUpsertInput[],
+) {
+  const result = await apiFetch(
+    `/v1/workspaces/${workspaceId}/budgets/bulk-create/`,
+    {
+      method: "POST",
+      body: JSON.stringify({ budgets }),
+    },
+  );
+  revalidatePath("/dashboard/budgets");
+  return result;
+}

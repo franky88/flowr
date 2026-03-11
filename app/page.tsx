@@ -625,14 +625,52 @@ export default function HomePage() {
         {/* ── NAV ── */}
         <nav className="lp-nav">
           <div className="lp-logo">
-            <div className="lp-logo-mark">F</div>
-            <span className="lp-logo-text">Flowr</span>
+            <svg
+              height="28"
+              viewBox="0 0 120 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-label="Flowr"
+            >
+              <defs>
+                <linearGradient
+                  id="nav-logo-grad"
+                  x1="0"
+                  y1="0"
+                  x2="120"
+                  y2="0"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor="#2d7a4f" />
+                  <stop offset="100%" stopColor="#5ecf8a" />
+                </linearGradient>
+              </defs>
+              <text
+                x="0"
+                y="26"
+                fontFamily="'Playfair Display', serif"
+                fontWeight="700"
+                fontStyle="italic"
+                fontSize="28"
+                fill="url(#nav-logo-grad)"
+              >
+                Flowr
+              </text>
+            </svg>
           </div>
           <ul className="lp-nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#preview">Preview</a></li>
-            <li><a href="/pricing">Pricing</a></li>
-            <li><a href="#how">How it works</a></li>
+            <li>
+              <a href="#features">Features</a>
+            </li>
+            <li>
+              <a href="#preview">Preview</a>
+            </li>
+            <li>
+              <a href="/pricing">Pricing</a>
+            </li>
+            <li>
+              <a href="#how">How it works</a>
+            </li>
           </ul>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <ThemeToggle />
@@ -689,16 +727,50 @@ export default function HomePage() {
 
           <div className="hero-stats">
             {[
-              { label: "Opening Balance", value: "₱ 42,500.00", tone: "neutral", badge: "Feb 2026", badgeTone: "neutral", icon: "🏦", cls: "neutral" },
-              { label: "Total Income",    value: "+ ₱ 65,000.00", tone: "green",   badge: "3 transactions", badgeTone: "up",   icon: "↑", cls: "income" },
-              { label: "Total Expenses",  value: "− ₱ 38,240.00", tone: "red",     badge: "14 transactions", badgeTone: "down", icon: "↓", cls: "expense" },
-              { label: "Net Balance",     value: "₱ 69,260.00",  tone: "green",   badge: "↑ Surplus", badgeTone: "up", icon: "✓", cls: "balance" },
+              {
+                label: "Opening Balance",
+                value: "₱ 42,500.00",
+                tone: "neutral",
+                badge: "Feb 2026",
+                badgeTone: "neutral",
+                icon: "🏦",
+                cls: "neutral",
+              },
+              {
+                label: "Total Income",
+                value: "+ ₱ 65,000.00",
+                tone: "green",
+                badge: "3 transactions",
+                badgeTone: "up",
+                icon: "↑",
+                cls: "income",
+              },
+              {
+                label: "Total Expenses",
+                value: "− ₱ 38,240.00",
+                tone: "red",
+                badge: "14 transactions",
+                badgeTone: "down",
+                icon: "↓",
+                cls: "expense",
+              },
+              {
+                label: "Net Balance",
+                value: "₱ 69,260.00",
+                tone: "green",
+                badge: "↑ Surplus",
+                badgeTone: "up",
+                icon: "✓",
+                cls: "balance",
+              },
             ].map((s) => (
               <div key={s.label} className={`stat ${s.cls}`}>
                 <div className="stat-icon-wrap">{s.icon}</div>
                 <div className="stat-label">{s.label}</div>
                 <div className={`stat-value ${s.tone}`}>{s.value}</div>
-                <div className={`stat-badge badge-${s.badgeTone}`}>{s.badge}</div>
+                <div className={`stat-badge badge-${s.badgeTone}`}>
+                  {s.badge}
+                </div>
               </div>
             ))}
           </div>
@@ -715,8 +787,12 @@ export default function HomePage() {
             <span className="formula-part debit">Expenses</span>
             <span className="formula-op">=</span>
             <span className="formula-part hi">Running Balance</span>
-            <span className="formula-op" style={{ marginLeft: "auto" }}>·</span>
-            <span className="formula-part" style={{ fontSize: "0.72rem" }}>Computed daily. Never stored.</span>
+            <span className="formula-op" style={{ marginLeft: "auto" }}>
+              ·
+            </span>
+            <span className="formula-part" style={{ fontSize: "0.72rem" }}>
+              Computed daily. Never stored.
+            </span>
           </div>
         </div>
 
@@ -735,12 +811,36 @@ export default function HomePage() {
           </div>
           <div className="features-grid reveal">
             {[
-              { icon: "TX",     title: "Transactions First",       desc: "Every balance, report, and budget is computed from raw transactions. No stored aggregates. No sync issues. One source of truth." },
-              { icon: "MONTH",  title: "Month-Scoped by Design",   desc: "Budgets and reports never cross month boundaries. Each month is isolated and independently configurable — per account, not globally." },
-              { icon: "BUDGET", title: "Smart Budget Rules",       desc: "Define budgets as fixed amounts (Internet = ₱900) or as a percentage of each account's income base (Groceries = 20%). Both resolve to live values per account." },
-              { icon: "ACCT",   title: "Account-Level Config",     desc: "Income base and opening balance are configured per account, per month. Each account has its own cashflow context — no global overrides." },
-              { icon: "CAT",    title: "Nested Categories",        desc: "Organize spending with nested categories. Parent categories roll up child totals automatically across all reports and budget views." },
-              { icon: "DAILY",  title: "Daily Running Balance",    desc: "See exactly where your balance stands day-by-day throughout the month. Cashflow gaps are visible before they become problems." },
+              {
+                icon: "TX",
+                title: "Transactions First",
+                desc: "Every balance, report, and budget is computed from raw transactions. No stored aggregates. No sync issues. One source of truth.",
+              },
+              {
+                icon: "MONTH",
+                title: "Month-Scoped by Design",
+                desc: "Budgets and reports never cross month boundaries. Each month is isolated and independently configurable — per account, not globally.",
+              },
+              {
+                icon: "BUDGET",
+                title: "Smart Budget Rules",
+                desc: "Define budgets as fixed amounts (Internet = ₱900) or as a percentage of each account's income base (Groceries = 20%). Both resolve to live values per account.",
+              },
+              {
+                icon: "ACCT",
+                title: "Account-Level Config",
+                desc: "Income base and opening balance are configured per account, per month. Each account has its own cashflow context — no global overrides.",
+              },
+              {
+                icon: "CAT",
+                title: "Nested Categories",
+                desc: "Organize spending with nested categories. Parent categories roll up child totals automatically across all reports and budget views.",
+              },
+              {
+                icon: "DAILY",
+                title: "Daily Running Balance",
+                desc: "See exactly where your balance stands day-by-day throughout the month. Cashflow gaps are visible before they become problems.",
+              },
             ].map((f) => (
               <div key={f.icon} className="feature-card">
                 <div className="feature-icon-tag">{f.icon}</div>
@@ -768,25 +868,83 @@ export default function HomePage() {
 
             <div className="mock-table reveal">
               <div className="mock-header">
-                {["Date", "Description", "Account", "Amount", "Balance"].map((h) => (
-                  <div key={h} className="mock-th">{h}</div>
-                ))}
+                {["Date", "Description", "Account", "Amount", "Balance"].map(
+                  (h) => (
+                    <div key={h} className="mock-th">
+                      {h}
+                    </div>
+                  ),
+                )}
               </div>
               {[
-                { date: "Feb 01", desc: "Monthly Salary",      acct: "BDO Savings", red: false, amt: "+ 65,000.00", income: true,  bal: "107,500.00" },
-                { date: "Feb 03", desc: "Meralco Electric",    acct: "GCash",        red: true,  amt: "− 3,200.00",  income: false, bal: "104,300.00" },
-                { date: "Feb 05", desc: "SM Supermarket",      acct: "BDO Savings", red: true,  amt: "− 5,840.00",  income: false, bal: "98,460.00"  },
-                { date: "Feb 08", desc: "Globe Telecom",       acct: "GCash",        red: true,  amt: "− 900.00",    income: false, bal: "97,560.00"  },
-                { date: "Feb 12", desc: "Netflix, Spotify",    acct: "BDO Credit",  red: true,  amt: "− 950.00",    income: false, bal: "96,610.00"  },
-                { date: "Feb 15", desc: "Freelance Invoice #12", acct: "BDO Savings", red: false, amt: "+ 12,000.00", income: true, bal: "108,610.00" },
+                {
+                  date: "Feb 01",
+                  desc: "Monthly Salary",
+                  acct: "BDO Savings",
+                  red: false,
+                  amt: "+ 65,000.00",
+                  income: true,
+                  bal: "107,500.00",
+                },
+                {
+                  date: "Feb 03",
+                  desc: "Meralco Electric",
+                  acct: "GCash",
+                  red: true,
+                  amt: "− 3,200.00",
+                  income: false,
+                  bal: "104,300.00",
+                },
+                {
+                  date: "Feb 05",
+                  desc: "SM Supermarket",
+                  acct: "BDO Savings",
+                  red: true,
+                  amt: "− 5,840.00",
+                  income: false,
+                  bal: "98,460.00",
+                },
+                {
+                  date: "Feb 08",
+                  desc: "Globe Telecom",
+                  acct: "GCash",
+                  red: true,
+                  amt: "− 900.00",
+                  income: false,
+                  bal: "97,560.00",
+                },
+                {
+                  date: "Feb 12",
+                  desc: "Netflix, Spotify",
+                  acct: "BDO Credit",
+                  red: true,
+                  amt: "− 950.00",
+                  income: false,
+                  bal: "96,610.00",
+                },
+                {
+                  date: "Feb 15",
+                  desc: "Freelance Invoice #12",
+                  acct: "BDO Savings",
+                  red: false,
+                  amt: "+ 12,000.00",
+                  income: true,
+                  bal: "108,610.00",
+                },
               ].map((row, i) => (
                 <div key={i} className="mock-row">
                   <div className="mock-td date">{row.date}</div>
                   <div className="mock-td desc">{row.desc}</div>
                   <div className="mock-td cat-cell">
-                    <span className={`cat-chip${row.red ? " red" : ""}`}>{row.acct}</span>
+                    <span className={`cat-chip${row.red ? " red" : ""}`}>
+                      {row.acct}
+                    </span>
                   </div>
-                  <div className={`mock-td ${row.income ? "income" : "expense"}`}>{row.amt}</div>
+                  <div
+                    className={`mock-td ${row.income ? "income" : "expense"}`}
+                  >
+                    {row.amt}
+                  </div>
                   <div className="mock-td balance">{row.bal}</div>
                 </div>
               ))}
@@ -796,40 +954,97 @@ export default function HomePage() {
               <div className="budget-card reveal">
                 <div className="budget-card-title">Budget Usage — Feb 2026</div>
                 {[
-                  { cat: "Groceries",     pct: 89,  tier: ""     },
-                  { cat: "Internet",      pct: 100, tier: "warn"  },
-                  { cat: "Transport",     pct: 54,  tier: ""      },
-                  { cat: "Dining Out",    pct: 124, tier: "over"  },
-                  { cat: "Subscriptions", pct: 63,  tier: ""      },
+                  { cat: "Groceries", pct: 89, tier: "" },
+                  { cat: "Internet", pct: 100, tier: "warn" },
+                  { cat: "Transport", pct: 54, tier: "" },
+                  { cat: "Dining Out", pct: 124, tier: "over" },
+                  { cat: "Subscriptions", pct: 63, tier: "" },
                 ].map((b) => (
                   <div key={b.cat} className="budget-row">
                     <span className="budget-cat">{b.cat}</span>
                     <div className="budget-bar-wrap">
-                      <div className={`budget-bar${b.tier ? ` ${b.tier}` : ""}`} style={{ width: `${Math.min(b.pct, 100)}%` }} />
+                      <div
+                        className={`budget-bar${b.tier ? ` ${b.tier}` : ""}`}
+                        style={{ width: `${Math.min(b.pct, 100)}%` }}
+                      />
                     </div>
-                    <span className={`budget-pct${b.tier === "over" ? " over" : ""}`}>{b.pct}%</span>
+                    <span
+                      className={`budget-pct${b.tier === "over" ? " over" : ""}`}
+                    >
+                      {b.pct}%
+                    </span>
                   </div>
                 ))}
               </div>
 
               <div className="budget-card reveal">
-                <div className="budget-card-title">Account Config — Feb 2026</div>
+                <div className="budget-card-title">
+                  Account Config — Feb 2026
+                </div>
                 {[
-                  { account: "BDO Savings", incomeBase: "₱ 65,000.00", opening: "₱ 42,500.00" },
-                  { account: "GCash",       incomeBase: "₱ 5,000.00",  opening: "₱ 1,200.00"  },
+                  {
+                    account: "BDO Savings",
+                    incomeBase: "₱ 65,000.00",
+                    opening: "₱ 42,500.00",
+                  },
+                  {
+                    account: "GCash",
+                    incomeBase: "₱ 5,000.00",
+                    opening: "₱ 1,200.00",
+                  },
                 ].map((a, i) => (
                   <div key={a.account}>
-                    {i > 0 && <div style={{ height: 1, background: "color-mix(in oklch, white 8%, transparent)", margin: "4px 0" }} />}
-                    <div className="budget-row" style={{ borderBottom: "1px solid color-mix(in oklch, white 8%, transparent)" }}>
-                      <span className="budget-cat" style={{ color: "color-mix(in oklch, white 80%, transparent)", fontSize: "0.72rem", fontWeight: 700 }}>{a.account}</span>
+                    {i > 0 && (
+                      <div
+                        style={{
+                          height: 1,
+                          background:
+                            "color-mix(in oklch, white 8%, transparent)",
+                          margin: "4px 0",
+                        }}
+                      />
+                    )}
+                    <div
+                      className="budget-row"
+                      style={{
+                        borderBottom:
+                          "1px solid color-mix(in oklch, white 8%, transparent)",
+                      }}
+                    >
+                      <span
+                        className="budget-cat"
+                        style={{
+                          color: "color-mix(in oklch, white 80%, transparent)",
+                          fontSize: "0.72rem",
+                          fontWeight: 700,
+                        }}
+                      >
+                        {a.account}
+                      </span>
                     </div>
                     <div className="budget-row">
                       <span className="budget-cat">Income Base</span>
-                      <span style={{ fontFamily: "var(--lp-mono)", fontSize: "0.82rem", color: "var(--lp-green-logo)" }}>{a.incomeBase}</span>
+                      <span
+                        style={{
+                          fontFamily: "var(--lp-mono)",
+                          fontSize: "0.82rem",
+                          color: "var(--lp-green-logo)",
+                        }}
+                      >
+                        {a.incomeBase}
+                      </span>
                     </div>
                     <div className="budget-row">
                       <span className="budget-cat">Opening Balance</span>
-                      <span style={{ fontFamily: "var(--lp-mono)", fontSize: "0.82rem", color: "color-mix(in oklch, white 80%, transparent)" }}>{a.opening}</span>
+                      <span
+                        style={{
+                          fontFamily: "var(--lp-mono)",
+                          fontSize: "0.82rem",
+                          color: "color-mix(in oklch, white 80%, transparent)",
+                        }}
+                      >
+                        {a.opening}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -853,10 +1068,26 @@ export default function HomePage() {
           </div>
           <div className="steps reveal">
             {[
-              { num: "01", title: "Set up accounts", desc: "For each account and month, define its income base and opening balance. Each account gets its own cashflow context, scoped to the month." },
-              { num: "02", title: "Define rules",    desc: "Assign fixed or percent-based budgets to categories. Percent budgets resolve against each account's income base automatically." },
-              { num: "03", title: "Log everything",  desc: "Record income and expenses as they happen. Fast entry, categorized per transaction. Your data, always fresh." },
-              { num: "04", title: "Read the truth",  desc: "Cashflow, budget usage, and running balances are all computed live from your transactions. No stale summaries." },
+              {
+                num: "01",
+                title: "Set up accounts",
+                desc: "For each account and month, define its income base and opening balance. Each account gets its own cashflow context, scoped to the month.",
+              },
+              {
+                num: "02",
+                title: "Define rules",
+                desc: "Assign fixed or percent-based budgets to categories. Percent budgets resolve against each account's income base automatically.",
+              },
+              {
+                num: "03",
+                title: "Log everything",
+                desc: "Record income and expenses as they happen. Fast entry, categorized per transaction. Your data, always fresh.",
+              },
+              {
+                num: "04",
+                title: "Read the truth",
+                desc: "Cashflow, budget usage, and running balances are all computed live from your transactions. No stale summaries.",
+              },
             ].map((s) => (
               <div key={s.num} className="step">
                 <div className="step-num">{s.num}</div>
@@ -886,7 +1117,14 @@ export default function HomePage() {
                   <button className="btn-primary">Create Free Account</button>
                 </SignUpButton>
                 <SignInButton mode="modal">
-                  <button className="btn-ghost" style={{ borderColor: "color-mix(in oklch, white 15%, transparent)", color: "color-mix(in oklch, white 70%, transparent)" }}>
+                  <button
+                    className="btn-ghost"
+                    style={{
+                      borderColor:
+                        "color-mix(in oklch, white 15%, transparent)",
+                      color: "color-mix(in oklch, white 70%, transparent)",
+                    }}
+                  >
                     Sign In →
                   </button>
                 </SignInButton>
@@ -903,15 +1141,82 @@ export default function HomePage() {
         {/* ── FOOTER ── */}
         <footer className="lp-footer">
           <div className="footer-logo">
-            <div className="footer-logo-mark">F</div>
-            <span className="footer-logo-text">Flowr</span>
+            <svg
+              height="22"
+              viewBox="0 0 120 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-label="Flowr"
+            >
+              <defs>
+                <linearGradient
+                  id="footer-logo-grad"
+                  x1="0"
+                  y1="0"
+                  x2="120"
+                  y2="0"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor="#2d7a4f" />
+                  <stop offset="100%" stopColor="#5ecf8a" />
+                </linearGradient>
+              </defs>
+              <text
+                x="0"
+                y="26"
+                fontFamily="'Playfair Display', serif"
+                fontWeight="700"
+                fontStyle="italic"
+                fontSize="28"
+                fill="url(#footer-logo-grad)"
+              >
+                Flowr
+              </text>
+            </svg>
           </div>
-          <div className="footer-copy">© 2026 · Transactions are truth · Built on Next.js + Django</div>
-          <ul className="footer-links">
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Terms</a></li>
-            <li><a href="#">GitHub</a></li>
+          <ul
+            style={{
+              display: "flex",
+              gap: 24,
+              listStyle: "none",
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            <li>
+              <Link
+                href="/privacy"
+                style={{
+                  fontFamily: "var(--lp-mono)",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--lp-dim)",
+                  textDecoration: "none",
+                }}
+              >
+                Privacy
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/terms"
+                style={{
+                  fontFamily: "var(--lp-mono)",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--lp-dim)",
+                  textDecoration: "none",
+                }}
+              >
+                Terms
+              </Link>
+            </li>
           </ul>
+          <div className="footer-copy">
+            © {new Date().getFullYear()} Flowr. All rights reserved.
+          </div>
         </footer>
       </div>
     </>

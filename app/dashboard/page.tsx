@@ -19,6 +19,7 @@ import { CopyBudgetsButton } from "@/components/budgets/CopyBudgetsButton";
 import { getIntelligence } from "@/lib/api/intelligence";
 import { IntelligencePanel } from "./_components/IntelligencePanel";
 import { DashboardBudgetPieChart } from "./_components/DashboardBudgetPieChart";
+import { DigestPanel } from "./_components/DigestPanel";
 
 const DashboardPage = async ({
   searchParams,
@@ -63,6 +64,15 @@ const DashboardPage = async ({
       </div>
 
       <div className="space-y-8">
+        {intelligence && (
+          <DigestPanel
+            intelligence={intelligence}
+            kpis={data.kpis}
+            previousMonth={data.kpisCompare.previousMonth}
+            deltaIncomePct={data.kpisCompare.deltaPct.income}
+            deltaExpensePct={data.kpisCompare.deltaPct.expense}
+          />
+        )}
         {/* KPI CARDS */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card
@@ -96,11 +106,7 @@ const DashboardPage = async ({
           />
         </div>
 
-        {intelligence && <IntelligencePanel data={intelligence} />}
-
-        {/* <div className="w-full">
-          <DashboardBudgetProgress kpis={data.kpis} />
-        </div> */}
+        {/* {intelligence && <IntelligencePanel data={intelligence} />} */}
 
         {/* Transactions Section */}
         <div className="grid grid-cols-1 gap-4 p-4 border bg-card rounded-xl">
@@ -226,8 +232,15 @@ const DashboardPage = async ({
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-5">
+            {/* <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-5">
               <DashboardIndicator budgetRow={data.budgets.rows} />
+              <DashboardBudgetPieChart
+                rows={data.budgets.rows}
+                totals={data.budgets.totals}
+              />
+            </div> */}
+            <div className="grid grid-cols-1 xl:grid-cols-1 gap-5">
+              {/* <DashboardIndicator budgetRow={data.budgets.rows} /> */}
               <DashboardBudgetPieChart
                 rows={data.budgets.rows}
                 totals={data.budgets.totals}

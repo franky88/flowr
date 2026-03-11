@@ -1,7 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BudgetPieChart, fromDashboard } from "../budgets/BudgetPieChart";
+import { BudgetPieChart, fromDashboard } from "./DashboardBudgetPie";
 
 interface Props {
   rows: DashboardBudgetRow[];
@@ -13,15 +12,10 @@ interface Props {
 
 export function DashboardBudgetPieChart({ rows, totals }: Props) {
   return (
-    <Card>
-        <CardHeader><CardTitle>Budget Distribution</CardTitle></CardHeader>
-        <CardContent>
-          <BudgetPieChart
-            rows={fromDashboard(rows)}
-            totalSpent={totals.spent}
-            totalBudget={totals.budgetResolved}
-            />
-        </CardContent>
-    </Card>
+    <BudgetPieChart
+      rows={fromDashboard(rows)}
+      totalSpent={totals.spent}
+      totalBudget={totals.budgetResolved}
+    />
   );
 }

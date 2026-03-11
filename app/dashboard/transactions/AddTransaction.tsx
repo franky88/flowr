@@ -13,7 +13,7 @@ import {
 import TransactionForm, { TransactionFormValues } from "./TransactionForm";
 import { Plus } from "lucide-react";
 import { ApiError } from "@/lib/errors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface AddTransactionProps {
   month: string;
@@ -21,6 +21,9 @@ interface AddTransactionProps {
   accounts: Account[];
   categoriesForSelect: Array<{ id: string; name: string; level: number }>;
   title?: string;
+  defaultValues?: Partial<TransactionFormValues>; // ← add
+  autoOpen?: boolean; // ← add
+  onClose?: () => void;
 }
 
 export default function AddTransaction({
@@ -29,10 +32,22 @@ export default function AddTransaction({
   accounts,
   categoriesForSelect,
   title,
+  defaultValues,
+  autoOpen,
+  onClose,
 }: AddTransactionProps) {
   // ← swap useState for the store
   const { isOpen, open, close } = useTransactionModal();
   const [serverError, setServerError] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (autoOpen) open();
+  }, [autoOpen]);
+
+  function handleClose() {
+    close();
+    onClose?.();
+  }
 
   const disabled = accounts.length === 0 || categoriesForSelect.length === 0;
 
@@ -79,7 +94,7 @@ export default function AddTransaction({
             accounts={accounts}
             categoriesForSelect={categoriesForSelect as any}
             onSubmit={handleCreate}
-            defaultValues={{ type: "expense" }}
+            defaultValues={defaultValues ?? { type: "expense" }}
             serverError={serverError}
           />
 
