@@ -45,49 +45,49 @@ const data = {
     },
     {
       title: "Transactions",
-      url: "/dashboard/transactions",
+      url: "/transactions",
       icon: IconListDetails,
     },
     {
       title: "Budgets",
-      url: "/dashboard/budgets",
+      url: "/budgets",
       icon: IconChartPie,
     },
     {
       title: "Cashflow",
-      url: "/dashboard/cashflow",
+      url: "/cashflow",
       icon: IconChartBar,
     },
     {
       title: "Reports",
-      url: "/dashboard/reports",
+      url: "/reports",
       icon: IconFolder,
     },
     {
       title: "Billing",
-      url: "/dashboard/billing",
+      url: "/billing",
       icon: IconCreditCard,
     },
     {
       title: "Settings",
-      url: "#",
+      url: "/settings",
       icon: IconSettings2,
       items: [
         {
           title: "Accounts",
-          url: "#",
+          url: "/settings/accounts",
         },
         {
           title: "Categories",
-          url: "#",
+          url: "/settings/categories",
         },
         {
           title: "Monthly Configuration",
-          url: "#",
+          url: "/settings/monthly-configuration",
         },
         {
           title: "Workspaces",
-          url: "#",
+          url: "/settings/workspaces",
         },
       ],
     },
@@ -143,7 +143,7 @@ const data = {
   navSecondary: [
     {
       title: "Settings",
-      url: "/dashboard/settings",
+      url: "/settings",
       icon: IconSettings,
     },
     {
